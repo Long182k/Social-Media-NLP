@@ -1,0 +1,382 @@
+.profile-container {
+  border-radius: 16px;
+  margin: 16px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.profile-container.light {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container.dark {
+  background: #1f1f1f;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.profile-info.dark {
+  color: #ffffff;
+}
+
+.profile-info.light {
+  color: #000000;
+}
+
+.profile-form.dark .ant-form-item-label > label {
+  color: #ffffff;
+}
+
+.profile-form.dark .ant-input,
+.profile-form.dark .ant-input-textarea {
+  background-color: #2f2f2f;
+  color: #ffffff;
+  border-color: #434343;
+}
+
+.profile-form.dark .ant-picker {
+  background-color: #2f2f2f;
+  border-color: #434343;
+}
+
+.profile-form.dark .ant-picker-input > input {
+  color: #ffffff;
+}
+
+.cover-photo {
+  height: 250px;
+  position: relative;
+  background: #e9ecef;
+}
+
+.cover-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  padding: 0 24px 24px;
+  position: relative;
+}
+
+.avatar-container {
+  margin-top: -50px;
+  margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-container img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-style: solid;
+  object-fit: cover;
+}
+
+.edit-button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.profile-details {
+  margin-top: 16px;
+}
+
+.profile-form {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.birth-date {
+  color: #65676b;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.bio {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  white-space: pre-wrap;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 32px;
+  padding: 16px 0;
+  border-top: 1px solid #e4e6eb;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.stat-label {
+  color: #65676b;
+  font-size: 14px;
+}
+
+.dark .birth-date,
+.dark .stat-label {
+  color: #b0b3b8;
+}
+
+.dark .profile-stats {
+  border-color: #3e4042;
+}
+
+.ant-modal {
+  max-width: 500px;
+}
+
+.ant-modal-content {
+  border-radius: 12px;
+  padding: 0;
+}
+
+.ant-modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e4e6eb;
+  margin: 0;
+}
+
+.ant-modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  margin-bottom: 0;
+  text-align: right;
+  margin-top: 24px;
+}
+
+.dark .ant-modal-content {
+  background: #242526;
+}
+
+.dark .ant-modal-header {
+  background: #242526;
+  border-color: #3e4042;
+}
+
+.dark .ant-modal-title {
+  color: #e4e6eb;
+}
+
+.dark .ant-modal-close {
+  color: #e4e6eb;
+}
+
+.dark .ant-modal-close:hover {
+  color: #ffffff;
+}
+
+.profile-form.dark .ant-input,
+.profile-form.dark .ant-input-textarea {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  color: #e4e6eb;
+}
+
+.profile-form.dark .ant-input:hover,
+.profile-form.dark .ant-input-textarea:hover {
+  border-color: #666;
+}
+
+.profile-form.dark .ant-input:focus,
+.profile-form.dark .ant-input-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.profile-form.dark .ant-picker {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+}
+
+.dark-date-picker input::placeholder {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.dark-date-picker input {
+  color: #e4e6eb !important;
+}
+
+.profile-form.dark .ant-picker-suffix {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.profile-form.dark .ant-picker:hover {
+  border-color: #666;
+}
+
+.profile-form.dark .ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.profile-form.dark .ant-form-item-label > label {
+  color: #e4e6eb;
+}
+
+.profile-form.dark .ant-input::placeholder,
+.profile-form.dark .ant-input-textarea textarea::placeholder {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.profile-form.dark .ant-picker-input > input:placeholder-shown {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.dark-modal .ant-modal-content {
+  background-color: #242526 !important;
+}
+
+.dark-modal .ant-modal-header {
+  background-color: #242526 !important;
+}
+
+.dark-modal .ant-modal-body {
+  background-color: #242526 !important;
+}
+
+.dark-modal .ant-modal-title {
+  color: #ffffff !important;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-actions button:hover,
+.cover-photo button:hover,
+.avatar-container button:hover {
+  background-color: #e4e6eb !important;
+  transition: background-color 0.2s ease;
+}
+
+.dark .profile-actions button:hover,
+.dark .cover-photo button:hover,
+.dark .avatar-container button:hover {
+  background-color: #4e4f50 !important;
+  color: #ffffff !important;
+}
+
+.dark .profile-actions button,
+.dark .cover-photo button,
+.dark .avatar-container button {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+}
+
+.dark .profile-actions button.copied {
+  color: #1890ff !important;
+}
+
+.dark-modal .ant-btn {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  color: #e4e6eb;
+}
+
+.dark-modal .ant-btn:hover {
+  background-color: #4e4f50;
+  border-color: #4e4f50;
+  color: #ffffff;
+}
+
+.dark-modal .ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: #ffffff;
+}
+
+.dark-modal .ant-btn-primary:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.profile-form .ant-form-item-label > label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #1f1f1f;
+}
+
+.profile-form.dark .ant-form-item-label > label {
+  color: #ffffff;
+}
+
+.profile-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.profile-form .ant-form-item-required::before {
+  color: #ff4d4f !important;
+}
+
+.profile-form.dark .ant-form-item-required::before {
+  color: #ff7875 !important;
+}
+
+.profile-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+.profile-form .ant-form-item-label {
+  padding: 0 0 4px;
+}
+
+.profile-form .ant-form-item-label > label {
+  font-size: 14px;
+  font-weight: 500;
+  height: auto;
+  color: #1f1f1f;
+}
+
+.profile-form.dark .ant-form-item-label > label {
+  color: #e4e6eb;
+}
+
+.profile-form .ant-form-item-required::before {
+  margin-right: 2px;
+}
+
+[data-theme="dark"] .ant-input::placeholder,
+[data-theme="dark"] .ant-picker-input > input::placeholder,
+[data-theme="dark"] .ant-input-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="dark"] .ant-picker-input > input {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+[data-theme="dark"] .ant-picker-input > input[value] {
+  color: #ffffff;
+}

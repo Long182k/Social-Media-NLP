@@ -1,0 +1,55 @@
+name: 🚀 Deploy to VPS
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      VITE_SERVER_URL: ${{ secrets.VITE_SERVER_URL }}
+      VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
+      VITE_SOCKET_URL: ${{ secrets.VITE_SOCKET_URL }}
+
+    steps:
+      - name: 🛠 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚡ Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: 🧱 Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: 🏗️ Build project
+        run: pnpm run build
+
+      - name: 🔐 Setup SSH connection
+        run: |
+          echo "${{ secrets.VPS_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: 🚀 Deploy built FE to VPS
+        run: |
+          # Clean old files and upload new build
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $VPS_USER@$VPS_HOST "rm -rf ~/FE-SOCIAL-MEDIA/dist && mkdir -p ~/FE-SOCIAL-MEDIA/dist"
+          scp -r -o StrictHostKeyChecking=no -i private_key.pem dist/* $VPS_USER@$VPS_HOST:~/FE-SOCIAL-MEDIA/dist/
+
+          # Optional: Run backend maintenance if required
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $VPS_USER@$VPS_HOST << 'EOF'
+            set -e
+            echo "===== 🧩 Pull latest code ====="
+            export GIT_SSH_COMMAND='ssh -i ~/.ssh/github_ci -o IdentitiesOnly=yes -o StrictHostKeyChecking=no'
+            cd ~/FE-SOCIAL-MEDIA && git pull origin dev
+
+            echo "✅ Deployment complete!"
+            sudo docker ps
+          EOF

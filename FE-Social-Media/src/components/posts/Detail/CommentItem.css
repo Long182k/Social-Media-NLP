@@ -1,0 +1,12 @@
+.custom-mask {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.ant-image {
+  transition: transform 0.2s ease;
+}
+
+.ant-image:hover {
+  transform: scale(1.02);
+}

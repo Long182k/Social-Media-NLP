@@ -1,0 +1,157 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateNotificationInput {
+  content: String!
+  receiverId: String!
+  senderId: String!
+  type: NotificationType!
+}
+
+input CreatePostInput {
+  attachments: [MediaInput!]
+  content: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Media {
+  createdAt: DateTime!
+  id: ID!
+  postId: String
+  type: String!
+  url: String!
+}
+
+input MediaInput {
+  type: String!
+  url: String!
+}
+
+type Mutation {
+  createNotification(input: CreateNotificationInput!): Notification!
+  createPost(input: CreatePostInput!): Post!
+  deleteNotification(id: ID!): Boolean!
+  deletePost(id: ID!): Boolean!
+  followUser(userId: ID!): Boolean!
+  likePost(id: ID!): PostInteractionResponse!
+  markNotificationAsRead(id: ID!): Notification!
+  toggleBookmarkNotification(id: ID!): Notification!
+  updateAvatar(avatarUrl: String!): User!
+  updateCoverPage(coverPageUrl: String!): User!
+  updatePost(id: ID!, input: UpdatePostInput!): Post!
+}
+
+type Notification {
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  isRead: Boolean!
+  receiver: User
+  receiverId: String
+  sender: User
+  senderId: String!
+  type: NotificationType!
+  updatedAt: DateTime!
+}
+
+"""Type of notification (e.g. FOLLOW, LIKE, COMMENT, etc.)"""
+enum NotificationType {
+  APPROVED_JOIN_EVENT_REQUEST
+  APPROVED_JOIN_GROUP_REQUEST
+  BOOKMARK
+  COMMENT
+  FOLLOW
+  LIKE
+  NEW_JOIN_EVENT_REQUEST
+  NEW_JOIN_GROUP_REQUEST
+  REJECTED_JOIN_EVENT_REQUEST
+  REJECTED_JOIN_GROUP_REQUEST
+}
+
+input PaginationInput {
+  limit: Int! = 10
+  page: Int! = 1
+}
+
+type Post {
+  _count: PostCount
+  attachments: [Media!]
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  sentiment: String!
+  user: User!
+  userId: String!
+}
+
+type PostCount {
+  bookmarks: Int!
+  comments: Int!
+  likes: Int!
+}
+
+type PostInteractionResponse {
+  bookmarked: Boolean
+  liked: Boolean
+}
+
+type PostMeta {
+  limit: Int!
+  page: Int!
+  total: Int!
+  totalPages: Int!
+}
+
+type PostResponse {
+  data: [Post!]!
+  meta: PostMeta!
+}
+
+type Query {
+  me: User!
+  notifications: [Notification!]!
+  post(id: ID!): Post!
+  posts(pagination: PaginationInput): PostResponse!
+  user(id: ID!): User!
+  users: [User!]!
+}
+
+type Subscription {
+  notificationCreated: Notification!
+  notificationUpdated: Notification!
+  postCreated: Post!
+  postLiked: Notification!
+  userFollowed: UserFollowedEvent!
+}
+
+input UpdatePostInput {
+  attachments: [MediaInput!]
+  content: String
+}
+
+type User {
+  avatarUrl: String
+  bio: String
+  coverPageUrl: String
+  createdAt: DateTime
+  dateOfBirth: DateTime
+  email: String
+  id: ID!
+  isActive: Boolean
+  nickName: String!
+  role: String
+  userName: String!
+}
+
+type UserFollowedEvent {
+  followerId: ID!
+  followersCount: Float!
+  followingCount: Float!
+  followingId: ID!
+  isFollowing: Boolean!
+}

@@ -1,0 +1,327 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String            @id @default(uuid())
+  userName              String            @unique
+  nickName              String            @unique
+  email                 String            @unique
+  role                  Role              @default(USER)
+  hashedPassword        String
+  hashedRefreshToken    String?
+  avatarUrl             String?
+  coverPageUrl          String?
+  bio                   String?
+  dateOfBirth           DateTime?
+  isActive              Boolean           @default(true)
+  createdAt             DateTime          @default(now())
+  lastLoginAt           DateTime?
+  bookmarks             Bookmark[]
+  comments              Comment[]
+  following             Follow[]          @relation("Following")
+  followers             Follow[]          @relation("Followers")
+  likes                 Like[]
+  posts                 Post[]
+  ChatParticipant       ChatParticipant[]
+  ChatMessage           ChatMessage[]
+  ChatRoom              ChatRoom[]
+  createdGroups         Group[]           @relation("CreatedGroups")
+  groupMemberships      GroupMember[]
+  createdEvents         Event[]           @relation("CreatedEvents")
+  eventAttendee         EventAttendee[]
+  sentNotifications     Notification[]    @relation("NotificationSender")
+  receivedNotifications Notification[]    @relation("NotificationReceiver")
+
+  @@map("users")
+}
+
+model Group {
+  id          String        @id @default(uuid())
+  name        String
+  description String?       @db.Text
+  groupAvatar String?
+  creatorId   String
+  createdAt   DateTime      @default(now())
+  creator     User          @relation("CreatedGroups", fields: [creatorId], references: [id], onDelete: Cascade)
+  members     GroupMember[]
+  posts       Post[]
+
+  @@index([creatorId])
+  @@map("groups")
+}
+
+model GroupMember {
+  id       String       @id @default(uuid())
+  groupId  String
+  userId   String?
+  role     GroupRole    @default(MEMBER)
+  status   GroupStatus? @default(JOINED)
+  joinedAt DateTime     @default(now())
+  group    Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user     User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+  @@index([groupId])
+  @@index([userId])
+  @@map("group_members")
+}
+
+model Follow {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followingId], map: "follows_followingId_fkey")
+  @@map("follows")
+}
+
+model Post {
+  id          String       @id @default(uuid())
+  content     String       @db.Text
+  userId      String
+  groupId     String?
+  sentiment   String       @default("MODERATE")
+  createdAt   DateTime     @default(now())
+  bookmarks   Bookmark[]
+  comments    Comment[]
+  likes       Like[]
+  attachments Attachment[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group       Group?       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "posts_userId_fkey")
+  @@index([groupId])
+  @@map("posts")
+}
+
+model Attachment {
+  id            String       @id @default(uuid())
+  postId        String?
+  commentId     String?
+  type          MediaType
+  url           String
+  createdAt     DateTime     @default(now())
+  post          Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  Comment       Comment?     @relation(fields: [commentId], references: [id])
+  ChatMessage   ChatMessage? @relation(fields: [chatMessageId], references: [id])
+  chatMessageId String?
+
+  @@index([postId], map: "post_media_postId_fkey")
+  @@index([commentId], map: "post_media_commentId_fkey")
+  @@index([chatMessageId], map: "chat_message_media_messageId_fkey")
+  @@map("attachments")
+}
+
+model Comment {
+  id          String       @id @default(uuid())
+  content     String       @db.Text
+  userId      String
+  postId      String
+  sentiment   String       @default("MODERATE")
+  attachments Attachment[]
+  createdAt   DateTime     @default(now())
+  post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId], map: "comments_postId_fkey")
+  @@index([userId], map: "comments_userId_fkey")
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId], map: "likes_postId_fkey")
+  @@map("likes")
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId], map: "bookmarks_postId_fkey")
+  @@map("bookmarks")
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  content    String
+  type       NotificationType
+  senderId   String
+  receiverId String
+  isRead     Boolean          @default(false)
+  sender     User             @relation("NotificationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User             @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+model ChatRoom {
+  id           String            @id @default(uuid())
+  name         String
+  type         ChatRoomType      @default(DIRECT)
+  creatorId    String
+  participants ChatParticipant[]
+  messages     ChatMessage[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  User         User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String?
+
+  @@index([creatorId])
+}
+
+model ChatParticipant {
+  id         String   @id @default(uuid())
+  userId     String
+  chatRoomId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  joinedAt   DateTime @default(now())
+
+  @@unique([userId, chatRoomId])
+  @@index([userId])
+  @@index([chatRoomId])
+}
+
+model ChatMessage {
+  id          String       @id @default(uuid())
+  content     String       @db.Text
+  type        String       @default("MESSAGE")
+  senderId    String
+  receiverId  String
+  chatRoomId  String
+  user        User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  chatRoom    ChatRoom     @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([senderId])
+  @@index([chatRoomId])
+}
+
+model Event {
+  id          String          @id @default(uuid())
+  name        String
+  description String          @db.Text
+  eventAvatar String?
+  eventDate   DateTime
+  creatorId   String
+  category    EventCategory   @default(OTHER)
+  address     String?         @db.Text
+  createdAt   DateTime        @default(now())
+  creator     User            @relation("CreatedEvents", fields: [creatorId], references: [id], onDelete: Cascade)
+  attendees   EventAttendee[]
+
+  @@index([creatorId])
+  @@map("events")
+}
+
+model EventAttendee {
+  id        String         @id @default(uuid())
+  eventId   String
+  userId    String
+  role      AttendeeRole   @default(PENDING_ATTENDEE)
+  status    AttendeeStatus @default(ENROLL)
+  createdAt DateTime       @default(now())
+  event     Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([eventId])
+  @@index([userId])
+  @@map("event_attendees")
+}
+
+enum NotificationType {
+  LIKE
+  FOLLOW
+  COMMENT
+  BOOKMARK
+  NEW_JOIN_GROUP_REQUEST
+  APPROVED_JOIN_GROUP_REQUEST
+  REJECTED_JOIN_GROUP_REQUEST
+  NEW_JOIN_EVENT_REQUEST
+  APPROVED_JOIN_EVENT_REQUEST
+  REJECTED_JOIN_EVENT_REQUEST
+}
+
+enum MediaType {
+  image
+  video
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ChatRoomType {
+  DIRECT
+  GROUP
+}
+
+enum ChatAttachmentType {
+  image
+  video
+}
+
+enum GroupRole {
+  ADMIN
+  PENDING
+  MEMBER
+}
+
+enum AttendeeRole {
+  ADMIN
+  ATTENDEE
+  PENDING_ATTENDEE
+}
+
+enum AttendeeStatus {
+  ENROLL
+  PENDING
+  CANCEL
+}
+
+enum GroupStatus {
+  JOINED
+  PENDING
+  REJECTED
+}
+
+enum EventCategory {
+  MUSIC
+  SPORTS
+  EDUCATION
+  TECHNOLOGY
+  FOOD
+  ART
+  BUSINESS
+  HEALTH
+  OTHER
+}

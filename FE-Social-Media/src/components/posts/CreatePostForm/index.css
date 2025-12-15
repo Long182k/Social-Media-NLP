@@ -1,0 +1,136 @@
+.create-post-card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.create-post-card .ant-input-textarea textarea {
+  font-family: inherit;
+}
+
+.create-post-card.light .ant-btn-text {
+  background-color: #f2f2f2;
+  color: rgba(0, 0, 0, 0.7);
+  padding: 8px 12px;
+}
+
+.create-post-card.light .ant-btn-text:hover {
+  background-color: #f2f2f2;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.create-post-card.dark {
+  background-color: #242526 !important;
+  border: 1px solid #3e4042;
+  box-shadow: none !important;
+}
+
+.create-post-card.dark .ant-input {
+  color: #e4e6eb !important;
+}
+
+.create-post-card.dark .ant-input::placeholder {
+  color: #b0b3b8;
+}
+
+.create-post-card.dark .ant-btn-text {
+  color: #b0b3b8;
+  padding: 8px 12px;
+}
+
+.create-post-card.dark .ant-btn-text:hover {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+}
+
+.create-post-card .ant-space-item {
+  width: 100%;
+}
+
+.create-post-card .ant-space-horizontal {
+  width: 100%;
+}
+
+.create-post-card .ant-space-horizontal > .ant-space-item:last-child {
+  flex: 1;
+}
+
+.create-post-card.dark .post-actions .ant-btn {
+  color: #e4e6eb;
+}
+
+.create-post-card.dark .post-actions .ant-btn:hover {
+  background-color: #3a3b3c;
+}
+
+.create-post-card .post-actions .ant-btn {
+  height: 40px;
+  border-radius: 6px;
+}
+
+.create-post-card .create-btn {
+  background-color: #1b1b1b;
+  color: white;
+}
+
+.create-post-card.dark .create-btn {
+  background-color: #505151;
+}
+
+.create-post-card .create-btn:disabled {
+  background-color: #e4e6eb;
+  opacity: 0.6;
+}
+
+.create-post-card.dark .create-btn:disabled {
+  background-color: #505151;
+  opacity: 0.6;
+}
+
+.preview-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.preview-item img,
+.preview-item video {
+  display: block;
+  border-radius: 8px;
+}
+
+.remove-button {
+  position: absolute !important;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border: none !important;
+  padding: 4px !important;
+  height: auto !important;
+  color: white !important;
+}
+
+.remove-button:hover {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .remove-button {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .remove-button:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.ant-popover {
+  z-index: 1000;
+}
+
+.ant-popover .emoji-picker-react {
+  box-shadow: none;
+}

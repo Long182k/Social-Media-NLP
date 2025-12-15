@@ -1,0 +1,203 @@
+.homepage-layout {
+  display: flex;
+  justify-content: center;
+  /* max-width: 1440px; */
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+.main-content-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+
+.main-content {
+  margin: 0 24px 0 24px;
+}
+
+.stories-card,
+.create-post-card,
+.post-list-card {
+  margin: 16px;
+  border-radius: 16px;
+}
+
+.stories-list {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.create-post {
+  display: flex;
+  align-items: center;
+}
+
+.post-item {
+  padding: 16px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.post-info {
+  margin-left: 12px;
+}
+
+.right-card {
+  margin-top: 16px;
+}
+
+.recent-chats {
+  flex: 1;
+}
+
+.event-grid {
+  padding: 8px;
+  margin: 8px 0;
+  background: linear-gradient(to right, #c6ffdd, #fbd786, #f7797d);
+  border-radius: 8px;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  font-weight: bold;
+}
+
+.menu-sider-left.ant-menu-dark {
+  background: none !important;
+}
+
+.ant-btn-text:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ant-card-bordered {
+  border: none !important;
+}
+
+.ant-card .ant-card-grid {
+  box-shadow: none !important;
+}
+
+.contacts {
+  padding-left: 16px;
+}
+
+.logout-icon {
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .homepage-layout {
+    flex-direction: column;
+  }
+
+  .sider-left,
+  .sider-right {
+    display: none;
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+
+  .responsive-header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    max-width: 100%;
+  }
+
+  .create-post-card,
+  .post-list-card {
+    margin: 8px;
+  }
+}
+
+/* StoriesComponent.css */
+.stories-container {
+  display: flex;
+  padding: 16px;
+  margin: 16px;
+  background-color: white;
+  border-radius: 16px;
+}
+
+.stories-container.dark-mode {
+  background-color: #1f1f1f;
+}
+
+.story-item {
+  text-align: center;
+}
+
+.add-story {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-story-btn {
+  height: 64px;
+  width: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 24px;
+  border: none;
+}
+
+.story-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.story-avatar {
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.story-avatar:hover {
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.story-name {
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.stories-container.dark-mode .story-name {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Make the stories component horizontally scrollable on small screens */
+@media (max-width: 768px) {
+  .stories-container {
+    overflow-x: auto;
+  }
+
+  .stories-list {
+    gap: 12px;
+  }
+}

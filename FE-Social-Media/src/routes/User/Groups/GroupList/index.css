@@ -1,0 +1,150 @@
+.group-list-container {
+  padding: 24px;
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.create-group-button {
+  margin-bottom: 16px;
+}
+
+.group-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.group-card:hover {
+  transform: translateY(-2px);
+  box-shadow: #1677ff;
+  text-shadow: #1677ff;
+}
+
+.group-cover-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.group-cover-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.group-card:hover .group-cover-image img {
+  transform: scale(1.05);
+}
+
+.group-info {
+  margin-bottom: 8px;
+}
+
+.group-member-count {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.join-button {
+  height: 40px;
+  border-radius: 6px;
+}
+
+/* Add new class for group tabs */
+.groups-tab-container .ant-tabs-nav {
+  margin-bottom: 24px;
+}
+
+/* Dark mode styles */
+.dark .groups-tab-container .ant-tabs-tab {
+  color: #808080;
+  transition: color 0.3s;
+}
+
+.dark .groups-tab-container .ant-tabs-tab:hover {
+  color: #ffffff;
+}
+
+.dark .groups-tab-container .ant-tabs-tab.ant-tabs-tab-active {
+  font-weight: 500;
+}
+
+.dark
+  .groups-tab-container
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn {
+  color: #ffffff;
+}
+
+.dark .groups-tab-container .ant-tabs-ink-bar {
+  background: #ffffff;
+}
+
+/* Update group tabs styles */
+.groups-tab-container.dark {
+  background: #141414;
+}
+
+.groups-tab-container.dark .ant-tabs-nav::before {
+  border-bottom: 1px solid #303030;
+}
+
+.groups-tab-container.dark .ant-tabs-tab {
+  color: #808080;
+  transition: color 0.3s;
+}
+
+.groups-tab-container.dark .ant-tabs-tab:hover {
+  color: #ffffff;
+}
+
+.groups-tab-container.dark .ant-tabs-tab.ant-tabs-tab-active {
+  font-weight: 500;
+}
+
+.groups-tab-container.dark .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #ffffff;
+}
+
+.groups-tab-container.dark .ant-tabs-ink-bar {
+  background: #ffffff;
+}
+
+.groups-tab-container .ant-tabs-nav .ant-tabs-tab-active {
+  border-color: transparent;
+}
+
+.groups-tab-container .ant-tabs-tab {
+  border: none;
+}
+
+.groups-tab-container .ant-tabs-tab-btn:active,
+.groups-tab-container .ant-tabs-tab-btn:focus,
+.groups-tab-container .ant-tabs-tab-remove:active,
+.groups-tab-container .ant-tabs-tab-remove:focus {
+  color: inherit;
+}
+
+.category-select.dark .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.creator-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}

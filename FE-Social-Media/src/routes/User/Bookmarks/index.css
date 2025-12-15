@@ -1,0 +1,119 @@
+.bookmarks-title {
+  color: var(--text-color);
+  margin: 0;
+  font-size: 24px;
+}
+
+.bookmarks-tabs {
+  color: var(--text-color);
+}
+
+.bookmark-list-item {
+  background: var(--background-color);
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  position: relative !important;
+  padding: 16px !important;
+}
+
+.bookmarks-tabs .ant-tabs-nav,
+.bookmarks-tabs div > .ant-tabs-nav,
+:where(.css-dev-only-do-not-override-ni1kz0).ant-tabs > .ant-tabs-nav,
+:where(.css-dev-only-do-not-override-ni1kz0).ant-tabs > div > .ant-tabs-nav {
+  position: static !important;
+  border-bottom: none !important;
+  margin-bottom: 16px;
+}
+
+.bookmark-avatar-wrapper {
+  margin-right: 12px;
+}
+
+.bookmark-avatar {
+  border: 2px solid #1677ff;
+}
+
+.bookmark-user-info {
+  width: 100%;
+}
+
+.bookmark-username {
+  color: var(--text-color);
+  font-size: 15px;
+}
+
+.bookmark-timestamp {
+  color: var(--text-secondary-color);
+  font-size: 14px;
+}
+
+.bookmark-content {
+  color: var(--text-color);
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.bookmark-media-container {
+  width: 100%;
+  margin: 12px 0;
+}
+
+.bookmark-video-wrapper {
+  width: 100%;
+  max-height: 600px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000000;
+}
+
+.bookmark-image {
+  width: 100%;
+  border-radius: 12px;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+.bookmark-delete-btn {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.bookmark-list-item:hover .bookmark-delete-btn {
+  opacity: 1;
+}
+
+.bookmark-delete-btn:hover {
+  background-color: var(--danger-hover-color) !important;
+}
+
+[data-theme="dark"] {
+  --background-color: #141414;
+  --text-color: #ffffff;
+  --text-secondary-color: #ffffff60;
+  --border-color: #ffffff15;
+  --danger-hover-color: rgba(255, 77, 79, 0.1);
+}
+
+[data-theme="light"] {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --text-secondary-color: #00000060;
+  --border-color: #00000015;
+  --danger-hover-color: rgba(255, 77, 79, 0.1);
+}
+
+.ant-layout {
+  background: var(--background-color);
+}
+
+[data-theme="dark"] .ant-empty-description {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .ant-empty-img-default path {
+  fill: #ffffff1a;
+}

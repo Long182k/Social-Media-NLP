@@ -1,0 +1,46 @@
+name: 🚀 Deploy to VPS
+
+on:
+  push:
+    branches:
+      - dev # run workflow only when new commits are merged into this branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+
+    steps:
+      - name: 🛠 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH connection
+        run: |
+          echo "${{ secrets.VPS_SSH_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+
+      - name: 🚀 Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $VPS_USER@$VPS_HOST << 'EOF'
+            set -e
+            echo "===== 🧩 Pull latest code ====="
+            export GIT_SSH_COMMAND='ssh -i ~/.ssh/github_ci -o IdentitiesOnly=yes -o StrictHostKeyChecking=no'
+            cd ~/BE-SOCIAL-MEDIA && GIT_SSH_COMMAND="ssh -i ~/.ssh/github_ci -o StrictHostKeyChecking=no" git pull origin dev
+
+            echo "===== 🛠 Build & restart containers ====="
+            cd ~/BE-SOCIAL-MEDIA
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
+
+            echo "===== 🧼 Prune old Docker images & volumes ====="
+            docker image prune -af
+            docker volume prune -f
+
+            echo "✅ Deployment complete! Checking backend status..."
+            sudo docker ps
+          EOF

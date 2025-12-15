@@ -1,0 +1,320 @@
+import { MailerService } from '@nestjs-modules/mailer';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import * as argon from 'argon2';
+import { randomUUID } from 'crypto';
+import Redis from 'ioredis';
+import { PrismaService } from 'src/prisma.service';
+import { CreateUserDTO } from 'src/users/dto/create-user.dto';
+import { UserRepository } from 'src/users/users.repository';
+import { UsersService } from '../users/users.service';
+import refreshTokenJwtConfig from './@config/refresh_token-jwt.config';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import 'dotenv/config';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+    private userRepository: UserRepository,
+    private prisma: PrismaService,
+    private readonly mailerService: MailerService,
+    @Inject(refreshTokenJwtConfig.KEY)
+    private refreshTokenConfig: ConfigType<typeof refreshTokenJwtConfig>,
+    @Inject('REDIS_CLIENT')
+    private redis: Redis,
+  ) {}
+
+  async validateUser(userName: string, password: string): Promise<any> {
+    const user = await this.usersService.findUserByKeyword({ userName });
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User is not active');
+    }
+
+    const isVerifiedPassword = await argon.verify(
+      user.hashedPassword,
+      password,
+    );
+
+    if (user && isVerifiedPassword) {
+      const { hashedPassword, ...result } = user;
+      return result;
+    } else {
+      await this.checkLoginAttempts(user.email, isVerifiedPassword);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+  }
+
+  // Rate Limiting Login
+  async checkLoginAttempts(
+    email: string,
+    isVerifiedPassword: boolean,
+  ): Promise<void> {
+    const key = `login_attempts:${email}`;
+    const loginAttempts = await this.redis.get(key);
+
+    if (
+      loginAttempts &&
+      Number(loginAttempts) >= Number(process.env.LOGIN_LIMIT)
+    ) {
+      throw new UnauthorizedException(
+        'Login attempts exceeded, please try again later',
+      );
+    }
+
+    if (!isVerifiedPassword) {
+      const attempts = loginAttempts ? Number(loginAttempts) : 0;
+      await this.redis.set(
+        key,
+        attempts + 1,
+        'EX',
+        Number(process.env.LOGIN_LIMIT_DURATION),
+      );
+    } else {
+      await this.redis.del(key);
+    }
+  }
+
+  async login(user: any) {
+    const { accessToken, refreshToken, jti } = await this.generateTokens(user);
+
+    await this.storeRefreshToken(user.id, jti);
+
+    return {
+      accessToken,
+      refreshToken,
+      userId: user.id,
+      userName: user.userName,
+      nickName: user.nickName,
+      email: user.email,
+      role: user.role,
+      avatarUrl: user.avatarUrl,
+      coverPageUrl: user.coverPageUrl,
+    };
+  }
+
+  async createUser(createUserDto: CreateUserDTO) {
+    const { accessToken, refreshToken } =
+      await this.generateTokens(createUserDto);
+
+    const result = await this.userRepository.createUser(createUserDto);
+
+    return {
+      ...result,
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async generateTokens(user: any) {
+    const payload = {
+      userId: user.id,
+      userName: user.userName,
+      nickName: user.nickName,
+      email: user.email,
+      role: user.role,
+      jti: randomUUID(),
+    };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, this.refreshTokenConfig),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+      jti: payload.jti,
+    };
+  }
+
+  private async storeRefreshToken(userId: string, jti: string) {
+    await this.redis.set(
+      `refresh:${userId}:${jti}`,
+      jti,
+      'EX',
+      Number(process.env.REFRESH_JWT_EXPIRED_TIME),
+    );
+  }
+
+  private async revokeRefreshToken(userId: string, jti: string) {
+    await this.redis.del(`refresh:${userId}:${jti}`);
+  }
+
+  async refreshToken(user: any) {
+    const { accessToken, refreshToken, jti } = await this.generateTokens(user);
+
+    return {
+      id: user.id,
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  private async verifyRefreshToken(rt: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        rt,
+        this.refreshTokenConfig,
+      );
+
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid Refresh Token', error);
+    }
+  }
+
+  // ROTATE receive old refresh token -> verify -> check this is still valid or not in Redis
+  // revoke the old -> create and store new refresh token.
+  async rotateRefreshToken(
+    oldRefreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { userId, jti } = await this.verifyRefreshToken(oldRefreshToken);
+
+    // check whether this RT still valid from Redis or not
+    const oldRT = await this.redis.get(`refresh:${userId}:${jti}`);
+    if (!oldRT) {
+      throw new UnauthorizedException('Invalid Refresh Token');
+    }
+
+    // revoke old RT
+    await this.revokeRefreshToken(userId, jti);
+
+    // create new RT
+    const userInfo = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const {
+      accessToken,
+      refreshToken,
+      jti: newJti,
+    } = await this.generateTokens(userInfo);
+
+    // store new RT
+    await this.storeRefreshToken(userId, newJti);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async validateRefreshToken(userId: string, refreshToken: string) {
+    const user = await this.usersService.findUserByKeyword({ id: userId });
+
+    if (!user || !user.hashedRefreshToken) {
+      throw new UnauthorizedException('Invalid Refresh Token');
+    }
+
+    const isRefreshTokenMatched = await argon.verify(
+      user.hashedRefreshToken,
+      refreshToken,
+    );
+
+    if (!isRefreshTokenMatched) {
+      throw new UnauthorizedException('Invalid Refresh Token');
+    }
+
+    return { id: userId };
+  }
+
+  async validateJWTUser(userId: string) {
+    const user = await this.usersService.findUserByKeyword({ id: userId });
+
+    if (!user || !user.hashedRefreshToken) {
+      throw new UnauthorizedException('User Not Found');
+    }
+
+    return {
+      userId: user.id,
+      userName: user.userName,
+      role: user.role,
+      email: user.email,
+    };
+  }
+
+  async signOut(oldRefreshToken: string, res) {
+    try {
+      const { sub: userId, jti } =
+        await this.verifyRefreshToken(oldRefreshToken);
+
+      res.clearCookie('refreshToken');
+
+      // revoke old RT
+      await this.revokeRefreshToken(userId, jti);
+      return {
+        message: 'Sign out successfully',
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Sign out failed', error.message);
+    }
+  }
+
+  async getUserById(id: string) {
+    return await this.usersService.findUserByKeyword({ id });
+  }
+
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const isPasswordValid = await argon.verify(
+      user.hashedPassword,
+      changePasswordDto.oldPassword,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    const hashedPassword = await argon.hash(changePasswordDto.newPassword);
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { hashedPassword },
+    });
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findUserByKeyword({ email });
+    if (!user) {
+      throw new NotFoundException('User with this email does not exist');
+    }
+    const newPassword = Math.random().toString(36).slice(-6);
+
+    const hashedPassword = await this.hashPassword(newPassword);
+
+    await this.prisma.user.update({
+      where: { email },
+      data: { hashedPassword },
+    });
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Connected Social Media Platform - Password Reset',
+      template: 'forgot-password',
+      context: {
+        name: user.userName,
+        newPassword: newPassword,
+      },
+    });
+
+    return {
+      message: 'Password reset instructions have been sent to your email',
+    };
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return argon.hash(password);
+  }
+}

@@ -1,0 +1,97 @@
+.group-cover-container {
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  position: relative;
+}
+
+.group-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.group-info-section {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.group-info-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+.group-title {
+  margin: 0;
+}
+
+.member-info {
+  margin-top: 8px;
+}
+
+.member-avatars {
+  display: flex;
+  margin-left: 8px;
+}
+
+.member-avatar {
+  margin-left: -8px;
+}
+
+.member-avatar:first-child {
+  margin-left: 0;
+}
+
+.group-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  border-radius: 6px;
+  height: 36px;
+}
+
+.posts-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.post-item {
+  background: transparent;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.post-meta {
+  margin-bottom: 16px;
+}
+
+.post-image {
+  border-radius: 8px;
+}
+
+.back-button {
+  opacity: 0;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 0;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.group-info-container:hover .back-button {
+  opacity: 1;
+}
+
+.group-info-content {
+  margin-left: 48px;
+}

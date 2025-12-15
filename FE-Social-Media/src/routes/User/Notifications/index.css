@@ -1,0 +1,96 @@
+.notifications-layout {
+  padding: 0 24px;
+}
+
+.notifications-layout.dark {
+  background: #141414;
+}
+
+.notifications-layout.light {
+  background: #ffffff;
+}
+
+.notifications-title {
+  padding: 16px 0;
+  margin: 0;
+  font-size: 24px;
+}
+
+.notifications-title.dark {
+  color: #ffffff;
+}
+
+.notifications-title.light {
+  color: #000000;
+}
+
+.notification-item {
+  padding: 12px 0;
+}
+
+.notification-item.dark {
+  border-bottom: 1px solid #ffffff1a;
+}
+
+.notification-item.light {
+  border-bottom: 1px solid #0000000a;
+}
+
+.notification-item.unread.dark {
+  background-color: #1a1a1a;
+}
+
+.notification-item.unread.light {
+  background-color: #f0f0f0;
+}
+
+.notification-item.unread {
+  cursor: pointer;
+}
+
+.notification-delete-icon {
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.notification-delete-icon.dark {
+  color: #ffffff80;
+}
+
+.notification-delete-icon.light {
+  color: #00000080;
+}
+
+.notification-delete-icon:hover {
+  color: #ff4d4f !important;
+}
+
+.notification-content.dark {
+  color: #ffffff99;
+}
+
+.notification-content.light {
+  color: #00000099;
+}
+
+.notification-time.dark {
+  color: #ffffff60;
+}
+
+.notification-time.light {
+  color: #00000060;
+}
+
+.notification-time {
+  font-size: 12px;
+}
+
+/* Empty state styles */
+.notifications-layout.dark .ant-empty-description {
+  color: #ffffff;
+}
+
+.notifications-layout.dark .ant-empty-img-default path {
+  fill: #ffffff1a;
+}

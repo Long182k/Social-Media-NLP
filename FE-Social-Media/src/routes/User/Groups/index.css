@@ -1,0 +1,88 @@
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+/* .ant-card {
+  height: 100%;
+} */
+
+.group-details-modal .ant-modal-content {
+  min-height: 400px;
+}
+
+.group-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.group-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.group-cover-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.group-cover-image img {
+  transition: transform 0.3s ease;
+}
+
+.group-card:hover .group-cover-image img {
+  transform: scale(1.05);
+}
+
+/* Modal styles */
+.ant-modal-content {
+  border-radius: 12px;
+}
+
+.ant-modal-header {
+  border-radius: 12px 12px 0 0;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+/* Button styles */
+.ant-btn-primary {
+  font-weight: 500;
+}
+
+/* Input styles */
+.ant-input,
+.ant-input-textarea {
+  border-radius: 6px;
+}
+
+.group-posts {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ant-list-item {
+  background: #fff;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.ant-list-item-meta {
+  margin-bottom: 16px;
+}
+
+.ant-list-item-meta-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ant-list-item-extra img {
+  border-radius: 8px;
+}
