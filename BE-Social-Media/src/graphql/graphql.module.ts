@@ -25,7 +25,7 @@ import { PubSubService } from './pubsub.service';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       path: '/api/graphql',
-      autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
+      autoSchemaFile: true,
       sortSchema: true,
       playground: true,
       subscriptions: {
