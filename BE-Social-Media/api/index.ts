@@ -1,5 +1,6 @@
+import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../dist/src/app.module';
+import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import express from 'express';

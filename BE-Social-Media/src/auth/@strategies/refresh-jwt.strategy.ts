@@ -28,7 +28,8 @@ export class RefreshJwtStrategy extends PassportStrategy(
   }
 
   async validate(req: Request, payload: any) {
-    const oldRt = req.cookies?.['refreshToken'] || req.body.refreshToken;
+    const reqAny = req as any;
+    const oldRt = reqAny.cookies?.['refreshToken'] || reqAny.body?.refreshToken;
     const newTokens = await this.authService.rotateRefreshToken(oldRt);
 
     return {
