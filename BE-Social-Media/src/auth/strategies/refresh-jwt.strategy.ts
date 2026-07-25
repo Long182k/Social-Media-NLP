@@ -12,17 +12,13 @@ export class RefreshJwtStrategy extends PassportStrategy(
   Strategy,
   'refresh-jwt',
 ) {
-  constructor(
-    private authService: AuthService,
-    @Inject(refresh_tokenJwtConfig.KEY)
-    private refreshTokenJwtConfig: ConfigType<typeof refresh_tokenJwtConfig>,
-  ) {
+  constructor(private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => req.cookies?.['refreshToken'] || null,
       ]),
       ignoreExpiration: false,
-      secretOrKey: refreshTokenJwtConfig.secret || 'super_secret_jwt_refresh_token_key_2026',
+      secretOrKey: process.env.REFRESH_JWT_SECRET || 'super_secret_jwt_refresh_token_key_2026',
       passReqToCallback: true,
     });
   }

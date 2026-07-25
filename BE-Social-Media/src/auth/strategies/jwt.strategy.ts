@@ -7,16 +7,12 @@ import { ConfigType } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private authService: AuthService,
-    @Inject(access_tokenJwtConfig.KEY)
-    private accessTokenJwtConfig: ConfigType<typeof access_tokenJwtConfig>,
-  ) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  constructor(private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: accessTokenJwtConfig.secret || 'super_secret_jwt_access_token_key_2026',
+      secretOrKey: process.env.JWT_SECRET || 'super_secret_jwt_access_token_key_2026',
     });
   }
 
