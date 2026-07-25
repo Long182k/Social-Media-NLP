@@ -6,19 +6,15 @@ import express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 
 const server = express();
-let cachedApp: any;
+let isInitialized = false;
 
-async function bootstrap() {
-  if (!cachedApp) {
+async function initServer() {
+  if (!isInitialized) {
     const app = await NestFactory.create(
       AppModule,
       new ExpressAdapter(server),
       { logger: ['error', 'warn', 'log'] },
     );
-
-    server.get('/', (req, res) => {
-      res.json({ status: 'online', service: 'Social Media NLP Backend' });
-    });
 
     app.enableCors({
       origin: true,
@@ -38,21 +34,29 @@ async function bootstrap() {
     );
 
     await app.init();
-    cachedApp = app;
+    isInitialized = true;
   }
-  return server;
 }
 
 export default async function handler(req: any, res: any) {
+  if (req.url === '/' || req.url === '/health' || req.url === '/api/health') {
+    return res.status(200).json({
+      status: 'online',
+      service: 'Social Media NLP Backend',
+      timestamp: new Date().toISOString(),
+    });
+  }
+
   try {
-    const app = await bootstrap();
-    app(req, res);
+    await initServer();
+    server(req, res);
   } catch (error: any) {
-    console.error('Serverless Handler Error:', error);
-    res.status(500).json({
+    console.error('NestJS Initialization Error:', error);
+    return res.status(500).json({
       statusCode: 500,
-      message: 'Internal Server Error',
-      error: error?.message || 'Server initialization failed',
+      error: 'Internal Server Error',
+      message: error?.message || 'Failed to initialize NestJS application',
+      stack: process.env.NODE_ENV === 'development' ? error?.stack : undefined,
     });
   }
 }
