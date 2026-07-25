@@ -40,6 +40,15 @@ async function bootstrap() {
 }
 
 export default async function handler(req: any, res: any) {
-  const app = await bootstrap();
-  app(req, res);
+  try {
+    const app = await bootstrap();
+    app(req, res);
+  } catch (error: any) {
+    console.error('Serverless Handler Error:', error);
+    res.status(500).json({
+      statusCode: 500,
+      message: 'Internal Server Error',
+      error: error?.message || 'Server initialization failed',
+    });
+  }
 }

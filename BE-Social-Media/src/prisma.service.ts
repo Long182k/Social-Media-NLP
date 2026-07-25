@@ -7,12 +7,20 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   async onModuleInit() {
-    console.log('Connect to MYSQL successfully');
-    await this.$connect();
+    try {
+      await this.$connect();
+      console.log('Connect to MYSQL successfully');
+    } catch (error) {
+      console.error('Failed to connect to MySQL database during startup:', error);
+    }
   }
 
   async onModuleDestroy() {
-    console.log('Disconnect to MYSQL successfully');
-    await this.$disconnect();
+    try {
+      await this.$disconnect();
+      console.log('Disconnect to MYSQL successfully');
+    } catch (error) {
+      console.error('Error disconnecting from MySQL:', error);
+    }
   }
 }
