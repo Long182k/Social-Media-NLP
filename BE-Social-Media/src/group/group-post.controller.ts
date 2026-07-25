@@ -11,9 +11,9 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { GroupPostService } from './group-post.service';
-import { JwtAuthGuard } from '../auth/@guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CreatePostDto, UpdatePostDto } from '../posts/dto/post.dto';
-import { CurrentUser } from '../auth/@decorator/current-user.decorator';
+import { CurrentUser } from '../auth/decorator/current-user.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('groups-posts')

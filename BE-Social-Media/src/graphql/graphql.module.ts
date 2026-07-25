@@ -16,7 +16,7 @@ import { InteractionsService } from '../posts/interactions.service';
 import { UsersResolver } from './resolvers/users.resolver';
 import { RedisModule } from '../redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
-import access_tokenJwtConfig from '../auth/@config/access_token-jwt.config';
+import access_tokenJwtConfig from '../auth/config/access_token-jwt.config';
 import { BookmarkService } from '../bookmark/bookmark.service';
 import { PubSubService } from './pubsub.service';
 

@@ -11,8 +11,8 @@ import {
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { JwtAuthGuard } from '../auth/@guard/jwt-auth.guard';
-import { CurrentUser } from '../auth/@decorator/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorator/current-user.decorator';
 
 @Controller('notification')
 @UseGuards(JwtAuthGuard)

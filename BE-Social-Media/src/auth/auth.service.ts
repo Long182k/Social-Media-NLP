@@ -14,7 +14,7 @@ import { PrismaService } from '../prisma.service';
 import { CreateUserDTO } from '../users/dto/create-user.dto';
 import { UserRepository } from '../users/users.repository';
 import { UsersService } from '../users/users.service';
-import refreshTokenJwtConfig from './@config/refresh_token-jwt.config';
+import refreshTokenJwtConfig from './config/refresh_token-jwt.config';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import 'dotenv/config';
 

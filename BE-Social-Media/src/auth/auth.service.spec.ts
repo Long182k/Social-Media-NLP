@@ -40,7 +40,7 @@ import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma.service';
 import { UsersService } from '../users/users.service';
 import { UserRepository } from '../users/users.repository';
-import refreshTokenJwtConfig from './@config/refresh_token-jwt.config';
+import refreshTokenJwtConfig from './config/refresh_token-jwt.config';
 
 describe('AuthService', () => {
   let service: AuthService;

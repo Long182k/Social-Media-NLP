@@ -1,6 +1,6 @@
 // Mock all dependencies before importing the controller
 jest.mock(
-  'src/auth/@guard/local-auth.guard',
+  'src/auth/guard/local-auth.guard',
   () => ({
     LocalAuthGuard: class LocalAuthGuardMock {},
   }),
@@ -8,7 +8,7 @@ jest.mock(
 );
 
 jest.mock(
-  'src/auth/@guard/jwt-auth.guard',
+  'src/auth/guard/jwt-auth.guard',
   () => ({
     JwtAuthGuard: class JwtAuthGuardMock {},
   }),
@@ -16,7 +16,7 @@ jest.mock(
 );
 
 jest.mock(
-  'src/auth/@guard/refresh-auth.guard',
+  'src/auth/guard/refresh-auth.guard',
   () => ({
     RefreshAuthGuard: class RefreshAuthGuardMock {},
   }),
@@ -24,7 +24,7 @@ jest.mock(
 );
 
 jest.mock(
-  'src/auth/@decorator/public.decorator',
+  'src/auth/decorator/public.decorator',
   () => ({
     Public: () => () => {},
     IS_PUBLIC_KEY: 'IS_PUBLIC_KEY',
@@ -33,7 +33,7 @@ jest.mock(
 );
 
 jest.mock(
-  'src/auth/@decorator/current-user.decorator',
+  'src/auth/decorator/current-user.decorator',
   () => ({
     CurrentUser: () => () => {},
   }),
@@ -41,7 +41,7 @@ jest.mock(
 );
 
 jest.mock(
-  'src/auth/@decorator/refreshToken.decorator',
+  'src/auth/decorator/refreshToken.decorator',
   () => ({
     RefreshToken: () => () => {},
     IS_REFRESH_TOKEN_KEY: 'IS_REFRESH_TOKEN_KEY',
@@ -63,7 +63,7 @@ jest.mock('src/users/users.repository');
 jest.mock('src/users/users.service');
 jest.mock('@nestjs-modules/mailer');
 jest.mock('ioredis');
-jest.mock('./@config/refresh_token-jwt.config');
+jest.mock('./config/refresh_token-jwt.config');
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
@@ -74,7 +74,7 @@ import { UserRepository } from '../users/users.repository';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigType } from '@nestjs/config';
-import refreshTokenJwtConfig from './@config/refresh_token-jwt.config';
+import refreshTokenJwtConfig from './config/refresh_token-jwt.config';
 
 describe('AuthController', () => {
   let controller: AuthController;

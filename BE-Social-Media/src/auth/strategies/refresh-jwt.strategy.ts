@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import 'dotenv/config';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import refresh_tokenJwtConfig from '../@config/refresh_token-jwt.config';
+import refresh_tokenJwtConfig from '../config/refresh_token-jwt.config';
 import { AuthService } from '../auth.service';
 
 @Injectable()

@@ -7,8 +7,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { IS_PUBLIC_KEY } from '../@decorator/public.decorator';
-import { IS_REFRESH_TOKEN_KEY } from '../@decorator/refreshToken.decorator';
+import { IS_PUBLIC_KEY } from '../decorator/public.decorator';
+import { IS_REFRESH_TOKEN_KEY } from '../decorator/refreshToken.decorator';
 import 'dotenv/config';
 
 @Injectable()

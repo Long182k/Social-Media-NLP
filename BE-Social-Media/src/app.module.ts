@@ -4,8 +4,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AdminModule } from './admin/admin.module';
 
-import { JwtAuthGuard } from './auth/@guard/jwt-auth.guard';
-import { RolesGuard } from './auth/@guard/roles.guard';
+import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { RolesGuard } from './auth/guard/roles.guard';
 import { AuthModule } from './auth/auth.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { CommentModule } from './comment/comment.module';
@@ -20,8 +20,8 @@ import { SocketModule } from './socket/chat.module';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 
-import access_tokenJwtConfig from './auth/@config/access_token-jwt.config';
-import refresh_tokenJwtConfig from './auth/@config/refresh_token-jwt.config';
+import access_tokenJwtConfig from './auth/config/access_token-jwt.config';
+import refresh_tokenJwtConfig from './auth/config/refresh_token-jwt.config';
 import { GraphQLAppModule } from './graphql/graphql.module';
 
 @Module({

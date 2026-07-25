@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from './user.model';
-import { NotificationType } from '../../auth/util/@enum/notification.enum';
+import { NotificationType } from '../../auth/util/enum/notification.enum';
 
 
 @ObjectType()

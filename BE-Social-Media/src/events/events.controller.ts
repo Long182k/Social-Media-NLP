@@ -14,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EventCategory } from '@prisma/client';
-import { CurrentUser } from '../auth/@decorator/current-user.decorator';
-import { JwtAuthGuard } from '../auth/@guard/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorator/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';

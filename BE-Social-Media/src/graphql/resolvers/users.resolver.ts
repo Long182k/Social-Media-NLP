@@ -7,7 +7,7 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { CurrentUser } from '../../auth/@decorator/current-user.decorator';
+import { CurrentUser } from '../../auth/decorator/current-user.decorator';
 import { UsersService } from '../../users/users.service';
 import { User, UserFollowedEvent } from '../models/user.model';
 

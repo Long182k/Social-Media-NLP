@@ -10,16 +10,16 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './@guard/local-auth.guard';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 import { CreateUserDTO } from '../users/dto/create-user.dto';
-import { CurrentUser } from './@decorator/current-user.decorator';
-import { Public } from './@decorator/public.decorator';
-import { JwtAuthGuard } from './@guard/jwt-auth.guard';
+import { CurrentUser } from './decorator/current-user.decorator';
+import { Public } from './decorator/public.decorator';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { RefreshAuthGuard } from './@guard/refresh-auth.guard';
-import { RefreshToken } from './@decorator/refreshToken.decorator';
+import { RefreshAuthGuard } from './guard/refresh-auth.guard';
+import { RefreshToken } from './decorator/refreshToken.decorator';
 
 @Controller('auth')
 export class AuthController {
