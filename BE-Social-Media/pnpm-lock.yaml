@@ -98,6 +98,9 @@ importers:
       ioredis:
         specifier: ^5.7.0
         version: 5.7.0(supports-color@8.1.1)
+      module-alias:
+        specifier: ^2.3.4
+        version: 2.3.4
       multer:
         specifier: 1.4.5-lts.1
         version: 1.4.5-lts.1
@@ -4436,6 +4439,9 @@ packages:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
     hasBin: true
+
+  module-alias@2.3.4:
+    resolution: {integrity: sha512-bOclZt8hkpuGgSSoG07PKmvzTizROilUTvLNyrMqvlC9snhs7y7GzjNWAVbISIOlhCP1T14rH1PDAV9iNyBq/w==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -11005,6 +11011,8 @@ snapshots:
       minimist: 1.2.8
 
   mkdirp@1.0.4: {}
+
+  module-alias@2.3.4: {}
 
   mri@1.2.0: {}
 

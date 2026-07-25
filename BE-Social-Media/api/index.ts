@@ -1,3 +1,10 @@
+import path from 'path';
+import moduleAlias from 'module-alias';
+
+moduleAlias.addAliases({
+  'src': path.resolve(__dirname, '../src'),
+});
+
 import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
