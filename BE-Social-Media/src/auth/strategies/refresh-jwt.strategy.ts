@@ -22,7 +22,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
         (req: Request) => req.cookies?.['refreshToken'] || null,
       ]),
       ignoreExpiration: false,
-      secretOrKey: refreshTokenJwtConfig.secret,
+      secretOrKey: refreshTokenJwtConfig.secret || 'super_secret_jwt_refresh_token_key_2026',
       passReqToCallback: true,
     });
   }
