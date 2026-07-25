@@ -16,7 +16,8 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
 import { UserRepository } from '../users/users.repository';
 import { PrismaService } from '../prisma.service';
 import { RedisModule } from '../redis/redis.module';
-import 'dotenv/config';
+import path from 'path';
+
 @Module({
   imports: [
     UsersModule,
@@ -39,7 +40,7 @@ import 'dotenv/config';
         from: `"Connected Social Media" <${process.env.EMAIL_USER}>`,
       },
       template: {
-        dir: process.cwd() + '/src/mail/templates',
+        dir: path.join(__dirname, '../mail/templates'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,

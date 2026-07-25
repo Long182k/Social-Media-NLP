@@ -1,12 +1,5 @@
-import path from 'path';
-import moduleAlias from 'module-alias';
-
-moduleAlias.addAliases({
-  'src': path.resolve(__dirname, '../src'),
-});
-
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../dist/app.module';
+import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import express from 'express';
