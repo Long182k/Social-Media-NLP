@@ -16,10 +16,12 @@ const redisProvider = {
         process.env.IS_PRODUCTION === 'true'
           ? Number(process.env.REDIS_PORT)
           : 6379,
-      // Add reconnect strategy
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+      enableOfflineQueue: false,
       retryStrategy: (times) => {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
+        if (times > 2) return null; // stop retrying quickly in serverless
+        return 100;
       },
     });
 

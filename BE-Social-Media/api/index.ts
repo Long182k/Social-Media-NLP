@@ -16,6 +16,10 @@ async function bootstrap() {
       { logger: ['error', 'warn', 'log'] },
     );
 
+    server.get('/', (req, res) => {
+      res.json({ status: 'online', service: 'Social Media NLP Backend' });
+    });
+
     app.enableCors({
       origin: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

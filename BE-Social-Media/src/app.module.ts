@@ -32,7 +32,6 @@ import { GraphQLAppModule } from './graphql/graphql.module';
     ConfigModule.forFeature(access_tokenJwtConfig),
     ConfigModule.forFeature(refresh_tokenJwtConfig),
     ConfigModule.forRoot({
-      envFilePath: '../.env',
       isGlobal: true,
     }),
     PostsModule,
