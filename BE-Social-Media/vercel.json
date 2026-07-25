@@ -1,24 +1,8 @@
 {
-  "version": 2,
-  "outputDirectory": "dist",
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "dist/**",
-          "prisma/**",
-          "node_modules/.prisma/client/**",
-          "node_modules/@prisma/client/**"
-        ]
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.ts"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }
