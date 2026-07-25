@@ -116,5 +116,14 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "argon2",
+      "prisma",
+      "@prisma/client",
+      "@prisma/engines"
+    ]
   }
 }
