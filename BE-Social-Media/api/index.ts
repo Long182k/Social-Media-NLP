@@ -49,7 +49,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     await initServer();
-    server(req, res);
+    return server(req, res);
   } catch (error: any) {
     console.error('NestJS Initialization Error:', error);
     return res.status(500).json({
