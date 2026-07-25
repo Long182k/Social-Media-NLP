@@ -14,10 +14,10 @@ import { CloudinaryService } from '../file/file.service';
 import { NlpService } from '../nlp/nlp.service';
 import { InteractionsService } from '../posts/interactions.service';
 import { UsersResolver } from './resolvers/users.resolver';
-import { RedisModule } from 'src/redis/redis.module';
+import { RedisModule } from '../redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
-import access_tokenJwtConfig from 'src/auth/@config/access_token-jwt.config';
-import { BookmarkService } from 'src/bookmark/bookmark.service';
+import access_tokenJwtConfig from '../auth/@config/access_token-jwt.config';
+import { BookmarkService } from '../bookmark/bookmark.service';
 import { PubSubService } from './pubsub.service';
 
 @Module({

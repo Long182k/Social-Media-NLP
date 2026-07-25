@@ -3,7 +3,7 @@ import { EventsService } from './events.service';
 import { EventsController } from './events.controller';
 import { PrismaService } from '../prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { CloudinaryService } from 'src/file/file.service';
+import { CloudinaryService } from '../file/file.service';
 
 @Module({
   controllers: [EventsController],

@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GroupRole, Role } from '@prisma/client';
-import { CloudinaryService } from 'src/file/file.service';
+import { CloudinaryService } from '../file/file.service';
 
 @Injectable()
 export class GroupService {

@@ -11,10 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CurrentUser } from 'src/auth/@decorator/current-user.decorator';
-import { Roles } from 'src/auth/@decorator/roles.decorator';
-import { ROLE } from 'src/auth/util/@enum/role.enum';
-import { CloudinaryService } from 'src/file/file.service';
+import { CurrentUser } from '../auth/@decorator/current-user.decorator';
+import { Roles } from '../auth/@decorator/roles.decorator';
+import { ROLE } from '../auth/util/@enum/role.enum';
+import { CloudinaryService } from '../file/file.service';
 import { GetUserByKeywordDTO } from './dto/get-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';

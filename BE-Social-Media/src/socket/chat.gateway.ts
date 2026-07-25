@@ -7,7 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Public } from 'src/auth/@decorator/public.decorator';
+import { Public } from '../auth/@decorator/public.decorator';
 
 @Public()
 @WebSocketGateway({

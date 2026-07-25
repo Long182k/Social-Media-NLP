@@ -37,9 +37,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import * as argon from 'argon2';
 
 import { AuthService } from './auth.service';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { UsersService } from '../users/users.service';
-import { UserRepository } from 'src/users/users.repository';
+import { UserRepository } from '../users/users.repository';
 import refreshTokenJwtConfig from './@config/refresh_token-jwt.config';
 
 describe('AuthService', () => {

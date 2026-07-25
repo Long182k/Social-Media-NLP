@@ -7,7 +7,7 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { CurrentUser } from 'src/auth/@decorator/current-user.decorator';
+import { CurrentUser } from '../../auth/@decorator/current-user.decorator';
 import { InteractionsService } from '../../posts/interactions.service';
 import { PostsService } from '../../posts/posts.service';
 import {

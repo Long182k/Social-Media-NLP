@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './@strategies/local.strategy';
@@ -11,11 +11,11 @@ import refreshJwtConfig from './@config/refresh_token-jwt.config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
-import { JwtStrategy } from 'src/auth/@strategies/jwt.strategy';
+import { JwtStrategy } from './@strategies/jwt.strategy';
 import { RefreshJwtStrategy } from './@strategies/refresh-jwt.strategy';
-import { UserRepository } from 'src/users/users.repository';
-import { PrismaService } from 'src/prisma.service';
-import { RedisModule } from 'src/redis/redis.module';
+import { UserRepository } from '../users/users.repository';
+import { PrismaService } from '../prisma.service';
+import { RedisModule } from '../redis/redis.module';
 import 'dotenv/config';
 @Module({
   imports: [

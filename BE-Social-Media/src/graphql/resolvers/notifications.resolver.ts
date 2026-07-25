@@ -6,8 +6,8 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { CurrentUser } from 'src/auth/@decorator/current-user.decorator';
-import { BookmarkService } from 'src/bookmark/bookmark.service';
+import { CurrentUser } from '../../auth/@decorator/current-user.decorator';
+import { BookmarkService } from '../../bookmark/bookmark.service';
 import { NotificationService } from '../../notification/notification.service';
 import { CreateNotificationInput } from '../inputs/notification.input';
 import { Notification } from '../models/notification.model';

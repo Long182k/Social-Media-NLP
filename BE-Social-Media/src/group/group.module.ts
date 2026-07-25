@@ -5,7 +5,7 @@ import { GroupPostController } from './group-post.controller';
 import { GroupPostService } from './group-post.service';
 import { PrismaService } from '../prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { CloudinaryService } from 'src/file/file.service';
+import { CloudinaryService } from '../file/file.service';
 import { NlpService } from '../nlp/nlp.service';
 
 @Module({

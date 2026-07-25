@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationType } from '@prisma/client';
-import { NotificationService } from 'src/notification/notification.service';
-import { PrismaService } from 'src/prisma.service';
+import { NotificationService } from '../notification/notification.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class BookmarkService {

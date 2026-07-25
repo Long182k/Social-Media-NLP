@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CurrentUser } from 'src/auth/@decorator/current-user.decorator';
+import { CurrentUser } from '../auth/@decorator/current-user.decorator';
 import { BookmarkService } from './bookmark.service';
 
 @Controller('bookmark')

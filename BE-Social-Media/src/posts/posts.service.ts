@@ -3,11 +3,11 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
-import { PaginationDto } from 'src/common/pagination.dto';
-import { CloudinaryService } from 'src/file/file.service';
-import { AttachmentsUploadedType } from 'src/file/file.type';
+import { PaginationDto } from '../common/pagination.dto';
+import { CloudinaryService } from '../file/file.service';
+import { AttachmentsUploadedType } from '../file/file.type';
 import { NlpService } from '../nlp/nlp.service';
 
 @Injectable()

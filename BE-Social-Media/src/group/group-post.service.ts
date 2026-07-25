@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreatePostDto, UpdatePostDto } from 'src/posts/dto/post.dto';
+import { CreatePostDto, UpdatePostDto } from '../posts/dto/post.dto';
 import { NlpService } from '../nlp/nlp.service';
-import { CloudinaryService } from 'src/file/file.service';
+import { CloudinaryService } from '../file/file.service';
 
 @Injectable()
 export class GroupPostService {

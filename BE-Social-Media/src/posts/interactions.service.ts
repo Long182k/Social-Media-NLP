@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { NotificationType, Prisma } from '@prisma/client';
 import Redlock from 'redlock';
-import { CloudinaryService } from 'src/file/file.service';
-import { AttachmentsUploadedType } from 'src/file/file.type';
-import { NotificationService } from 'src/notification/notification.service';
-import { PrismaService } from 'src/prisma.service';
+import { CloudinaryService } from '../file/file.service';
+import { AttachmentsUploadedType } from '../file/file.type';
+import { NotificationService } from '../notification/notification.service';
+import { PrismaService } from '../prisma.service';
 import { NlpService } from '../nlp/nlp.service';
 import { CreateCommentDto } from './dto/post.dto';
 

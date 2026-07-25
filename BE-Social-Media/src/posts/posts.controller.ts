@@ -13,10 +13,10 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { InteractionsService } from './interactions.service';
-import { CurrentUser } from 'src/auth/@decorator/current-user.decorator';
-import { PaginationDto } from 'src/common/pagination.dto';
+import { CurrentUser } from '../auth/@decorator/current-user.decorator';
+import { PaginationDto } from '../common/pagination.dto';
 import { CreateCommentDto, CreatePostDto, UpdatePostDto } from './dto/post.dto';
-import { JwtAuthGuard } from 'src/auth/@guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/@guard/jwt-auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')

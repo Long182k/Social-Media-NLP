@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import Redlock from 'redlock';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { GetUserByKeywordDTO } from './dto/get-user.dto';
 import {
   UpdateHashedRefreshTokenDTO,
