@@ -223,7 +223,7 @@ describe('AuthController', () => {
 
       authService.login.mockResolvedValue({ ...loginInfo });
 
-      const result = await controller.login(res, user);
+      const result = await controller.login(user);
 
       expect(authService.login).toHaveBeenCalledWith(user);
       expect(res.cookie).toHaveBeenCalledWith('refreshToken', 'refresh', {

@@ -172,7 +172,7 @@ function EventDetail({ isDarkMode }: EventDetailProps) {
         <div className="event-cover-container">
           <img
             className="event-cover-image"
-            src={event?.eventAvatar || "https://via.placeholder.com/1200x350"}
+            src={event?.eventAvatar || "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80"}
             alt={event?.name}
           />
         </div>

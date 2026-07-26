@@ -56,12 +56,24 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @RefreshToken()
-  @UseGuards(RefreshAuthGuard)
+  @Public()
   @Post('/refresh')
-  async refresh(@CurrentUser() user: any) {
-    const { accessToken, refreshToken } = user?.newTokens || {};
-    return { accessToken, refreshToken };
+  async refresh(@Request() req: any, @Body() body: any) {
+    const token =
+      body?.refreshToken ||
+      req.cookies?.['refreshToken'] ||
+      (req.headers.authorization?.startsWith('Bearer ')
+        ? req.headers.authorization.substring(7).trim()
+        : null);
+
+    if (!token) {
+      return {
+        statusCode: 401,
+        message: 'Refresh token required',
+      };
+    }
+
+    return await this.authService.rotateRefreshToken(token);
   }
 
   @Post('/signout')

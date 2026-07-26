@@ -111,7 +111,7 @@ function GroupList({ isDarkMode }: GroupListProps) {
                 <img
                   alt={group.name}
                   src={
-                    group.groupAvatar || "https://via.placeholder.com/400x200"
+                    group.groupAvatar || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80"
                   }
                   style={{ width: "100%", height: "200px", objectFit: "cover" }}
                 />

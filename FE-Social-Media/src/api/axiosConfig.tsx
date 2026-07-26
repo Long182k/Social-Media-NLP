@@ -101,7 +101,8 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axiosClient.post("/auth/refresh");
+        const storedRefreshToken = getStoreActions()?.userInfo?.refreshToken;
+        const { data } = await axiosClient.post("/auth/refresh", { refreshToken: storedRefreshToken });
         const newToken = data.accessToken;
         setAccessToken(newToken);
 

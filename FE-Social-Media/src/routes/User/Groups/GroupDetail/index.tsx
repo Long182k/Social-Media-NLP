@@ -417,7 +417,7 @@ function GroupDetail({ isDarkMode }: GroupDetailProps) {
         <div className="group-cover-container">
           <img
             className="group-cover-image"
-            src={group?.groupAvatar || "https://via.placeholder.com/1200x350"}
+            src={group?.groupAvatar || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80"}
             alt={groupName}
           />
         </div>
