@@ -3,7 +3,7 @@ import { MediaType } from '@prisma/client';
 
 @InputType()
 export class MediaInput {
-  @Field()
+  @Field(() => String)
   type: MediaType;
 
   @Field()
