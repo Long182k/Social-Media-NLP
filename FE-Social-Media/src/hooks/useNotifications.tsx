@@ -130,10 +130,15 @@ export const useNotifications = () => {
     }
   );
 
+  const isServerless =
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("vercel.app");
+
   // Subscribe to new notifications
   useSubscription<{ notificationCreated: Notification }>(
     NOTIFICATION_CREATED_SUBSCRIPTION,
     {
+      skip: isServerless || !userId,
       onData: ({ data }) => {
         if (data?.data?.notificationCreated) {
           // Check if this notification has already been shown
@@ -174,9 +179,7 @@ export const useNotifications = () => {
           }
         }
       },
-      onError: (error) => {
-        console.error("Subscription error:", error);
-      },
+      onError: () => {},
     }
   );
 

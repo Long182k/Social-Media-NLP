@@ -63,76 +63,55 @@ export class PostsService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    try {
-      const page = Number(paginationDto?.page || 1);
-      const limit = Number(paginationDto?.limit || 10);
-      const search = paginationDto?.search || undefined;
-      const skip = (page - 1) * limit;
-
-      const [posts, total] = await Promise.all([
-        this.prisma.post.findMany({
-          skip,
-          take: limit,
-          where: {
-            content: search ? { contains: search } : undefined,
-            groupId: null,
-          },
-          include: {
-            user: true,
-            comments: {
-              include: {
-                user: true,
-                attachments: true,
-              },
-            },
-            attachments: true,
-            _count: {
-              select: {
-                likes: true,
-                comments: true,
-                bookmarks: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        }),
-        this.prisma.post.count({
-          where: {
-            content: search ? { contains: search } : undefined,
-            groupId: null,
-          },
-        }),
-      ]);
-
-      if (posts && posts.length > 0) {
-        return {
-          data: posts,
-          meta: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-          },
-        };
-      }
-    } catch (error) {
-      console.warn('PostsService.findAll fallback:', error?.message || error);
-    }
-
     const page = Number(paginationDto?.page || 1);
     const limit = Number(paginationDto?.limit || 10);
-    const start = (page - 1) * limit;
-    const paginatedMock = MOCK_POSTS.slice(start, start + limit);
+    const search = paginationDto?.search || undefined;
+    const skip = (page - 1) * limit;
+
+    const [posts, total] = await Promise.all([
+      this.prisma.post.findMany({
+        skip,
+        take: limit,
+        where: {
+          content: search ? { contains: search } : undefined,
+          groupId: null,
+        },
+        include: {
+          user: true,
+          comments: {
+            include: {
+              user: true,
+              attachments: true,
+            },
+          },
+          attachments: true,
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+              bookmarks: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.post.count({
+        where: {
+          content: search ? { contains: search } : undefined,
+          groupId: null,
+        },
+      }),
+    ]);
 
     return {
-      data: paginatedMock,
+      data: posts,
       meta: {
-        total: MOCK_POSTS.length,
+        total,
         page,
         limit,
-        totalPages: Math.ceil(MOCK_POSTS.length / limit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

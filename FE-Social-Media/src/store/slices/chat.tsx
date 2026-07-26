@@ -192,14 +192,13 @@ export const createChatState: StateCreator<ChatStore> = (set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { socket, connectSocket } = useAppStore.getState();
+    const { socket } = useAppStore.getState();
 
-    if (!socket) {
-      console.log("no socket subscribeToMessages");
-      connectSocket();
+    if (!socket || !socket.connected) {
       return;
     }
 
+    socket.off("newMessage");
     socket.on("newMessage", (newMessage) => {
       set({
         messages: [...get().messages, newMessage],

@@ -150,7 +150,7 @@ function MessageApp({ currentUserId, isDarkMode }: MessageProps) {
     return () => {
       unsubscribeFromMessages();
     };
-  }, [socket, subscribeToMessages, unsubscribeFromMessages]);
+  }, [socket?.id]);
 
   const { data: chatRoomsQuery, refetch: refetchChatRooms } = useQuery<
     ChatRoom[],

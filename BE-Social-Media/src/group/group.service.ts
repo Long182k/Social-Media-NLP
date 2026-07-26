@@ -65,7 +65,7 @@ export class GroupService {
         });
       }
 
-      const groups = await this.prisma.group.findMany({
+      return await this.prisma.group.findMany({
         where: {
           OR: [
             {
@@ -111,16 +111,9 @@ export class GroupService {
           },
         },
       });
-
-      if (groups && groups.length > 0) return groups;
     } catch {
-      // Fallback
+      return [];
     }
-
-    return MOCK_GROUPS.map((g) => ({
-      ...g,
-      members: [{ role: 'MEMBER' }],
-    }));
   }
 
   async createGroup(

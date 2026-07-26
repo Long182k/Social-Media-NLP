@@ -358,36 +358,26 @@ export class UsersService {
         }),
       ]);
 
-      if (users && users.length > 0) {
-        return {
-          suggestions: users.map((user) => ({
-            ...user,
-            followersCount: user._count.followers,
-            followingCount: user._count.following,
-            _count: undefined,
-          })),
-          pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-          },
-        };
-      }
+      return {
+        suggestions: users.map((user) => ({
+          ...user,
+          followersCount: user._count.followers,
+          followingCount: user._count.following,
+          _count: undefined,
+        })),
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
     } catch {
-      // Fallback to MOCK_USERS for serverless preview
+      return {
+        suggestions: [],
+        pagination: { total: 0, page, limit, totalPages: 0 },
+      };
     }
-
-    const mockSuggestions = MOCK_USERS.slice(0, limit).map((user) => ({
-      ...user,
-      followersCount: 15,
-      followingCount: 10,
-    }));
-
-    return {
-      suggestions: mockSuggestions,
-      pagination: { total: MOCK_USERS.length, page, limit, totalPages: Math.ceil(MOCK_USERS.length / limit) },
-    };
   }
 
   async getRecentBirthdayUsers(
