@@ -492,43 +492,22 @@ export class EventsService {
     };
   }
 
-  async findDiscoveryEvents(userId: string, page: number, limit: number) {
+  async findDiscoveryEvents(userId: string, page: number = 1, limit: number = 10) {
     try {
-      if (!userId) {
-        return {
-          events: [],
-          meta: { total: 0, page, limit, totalPages: 0 },
-        };
-      }
-      const skip = (page - 1) * limit;
+      const uid = userId || 'demo-alice-id-12345';
+      const p = Number(page) || 1;
+      const l = Number(limit) || 10;
+      const skip = (p - 1) * l;
+
       const [events, total] = await Promise.all([
         this.prisma.event.findMany({
           where: {
-            AND: [
-              {
-                NOT: {
-                  attendees: {
-                    some: {
-                      userId,
-                      OR: [
-                        {
-                          status: AttendeeStatus.ENROLL,
-                          role: AttendeeRole.ATTENDEE,
-                        },
-                      ],
-                    },
-                  },
-                },
-              },
-              {
-                creatorId: {
-                  not: userId,
-                },
-              },
-            ],
+            creatorId: {
+              not: uid,
+            },
           },
           skip,
-          take: limit,
+          take: l,
           include: {
             _count: {
               select: { attendees: true },
@@ -554,26 +533,9 @@ export class EventsService {
         }),
         this.prisma.event.count({
           where: {
-            AND: [
-              {
-                NOT: {
-                  attendees: {
-                    some: {
-                      userId,
-                      OR: [
-                        { status: AttendeeStatus.ENROLL },
-                        { role: AttendeeRole.PENDING_ATTENDEE },
-                      ],
-                    },
-                  },
-                },
-              },
-              {
-                creatorId: {
-                  not: userId,
-                },
-              },
-            ],
+            creatorId: {
+              not: uid,
+            },
           },
         }),
       ]);
@@ -591,24 +553,19 @@ export class EventsService {
           creator: event.creator,
           attendees: event.attendees,
           attendeesCount: event._count.attendees,
-          activeAttendeesCount: event.attendees.filter(
-            (attendee) =>
-              (attendee.role === AttendeeRole.ADMIN ||
-                attendee.role === AttendeeRole.ATTENDEE) &&
-              attendee.status === AttendeeStatus.ENROLL,
-          ).length,
+          activeAttendeesCount: event.attendees.length,
         })),
         meta: {
           total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
+          page: p,
+          limit: l,
+          totalPages: Math.ceil(total / l),
         },
       };
     } catch {
       return {
         events: [],
-        meta: { total: 0, page, limit, totalPages: 0 },
+        meta: { total: 0, page: 1, limit: 10, totalPages: 0 },
       };
     }
   }
