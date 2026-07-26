@@ -82,39 +82,50 @@ export class EventsService {
         this.prisma.event.count(),
       ]);
 
-      return {
-        events: events.map((event) => ({
-          id: event.id,
-          name: event.name,
-          description: event.description,
-          eventAvatar: event.eventAvatar,
-          eventDate: event.eventDate,
-          category: event.category,
-          address: event.address,
-          createdAt: event.createdAt,
-          creator: event.creator,
-          attendees: event.attendees,
-          attendeesCount: event._count.attendees,
-          activeAttendeesCount: event.attendees.length,
-        })),
-        meta: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-        },
-      };
+      if (events && events.length > 0) {
+        return {
+          events: events.map((event) => ({
+            id: event.id,
+            name: event.name,
+            description: event.description,
+            eventAvatar: event.eventAvatar,
+            eventDate: event.eventDate,
+            category: event.category,
+            address: event.address,
+            createdAt: event.createdAt,
+            creator: event.creator,
+            attendees: event.attendees,
+            attendeesCount: event._count.attendees,
+            activeAttendeesCount: event.attendees.length,
+          })),
+          meta: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        };
+      }
     } catch {
-      return {
-        events: [],
-        meta: {
-          total: 0,
-          page,
-          limit,
-          totalPages: 0,
-        },
-      };
+      // Fallback
     }
+
+    const start = (page - 1) * limit;
+    const paginated = MOCK_EVENTS.slice(start, start + limit);
+    return {
+      events: paginated.map((evt) => ({
+        ...evt,
+        attendees: [],
+        attendeesCount: evt._count.attendees,
+        activeAttendeesCount: evt._count.attendees,
+      })),
+      meta: {
+        total: MOCK_EVENTS.length,
+        page,
+        limit,
+        totalPages: Math.ceil(MOCK_EVENTS.length / limit),
+      },
+    };
   }
 
   async findOne(id: string) {

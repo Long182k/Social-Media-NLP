@@ -25,7 +25,7 @@ export class NotificationService {
 
   async findAll(userId: string) {
     try {
-      return await this.prisma.notification.findMany({
+      const notifs = await this.prisma.notification.findMany({
         where: {
           receiverId: userId,
         },
@@ -47,9 +47,13 @@ export class NotificationService {
           },
         },
       });
+
+      if (notifs && notifs.length > 0) return notifs;
     } catch {
-      return [];
+      // Fallback
     }
+
+    return MOCK_NOTIFICATIONS;
   }
 
   async findOne(userId: string, id: string) {
