@@ -27,7 +27,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "FE-Social-Media/index.html"
+      "dest": "/index.html"
     }
   ]
 }
