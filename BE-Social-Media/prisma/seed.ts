@@ -1,4 +1,18 @@
-import { PrismaClient, Role, GroupRole, AttendeeRole, AttendeeStatus, EventCategory, NotificationType } from '@prisma/client';
+import 'dotenv/config';
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL =
+    'mysql://root:password@localhost:3306/social_media';
+}
+
+import {
+  PrismaClient,
+  Role,
+  GroupRole,
+  AttendeeRole,
+  AttendeeStatus,
+  EventCategory,
+  NotificationType,
+} from '@prisma/client';
 import * as argon from 'argon2';
 
 const prisma = new PrismaClient();
