@@ -69,6 +69,7 @@ export class PostsService {
     const search = paginationDto?.search || undefined;
     const skip = (page - 1) * limit;
 
+    let lastError = '';
     try {
       const [posts, total] = await Promise.all([
         this.prisma.post.findMany({
@@ -118,7 +119,8 @@ export class PostsService {
         },
       };
     } catch (err) {
-      console.error('[PostsService.findAll] DB error, falling back to mock:', err?.message);
+      lastError = err?.message || String(err);
+      console.error('[PostsService.findAll] DB error, falling back to mock:', lastError);
     }
 
     const start = (page - 1) * limit;
@@ -131,6 +133,7 @@ export class PostsService {
         page,
         limit,
         totalPages: Math.ceil(MOCK_POSTS.length / limit),
+        dbError: lastError,
       },
     };
   }

@@ -52,9 +52,11 @@ async function initServer() {
 
 export default async function handler(req: any, res: any) {
   if (req.url === '/' || req.url === '/health' || req.url === '/api/health') {
+    const dbUrl = process.env.DATABASE_URL || 'NOT_SET';
     return res.status(200).json({
       status: 'online',
       service: 'Social Media NLP Backend',
+      dbHost: dbUrl.substring(0, 30) + '...',
       timestamp: new Date().toISOString(),
     });
   }
