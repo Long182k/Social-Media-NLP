@@ -180,9 +180,21 @@ export class AuthService {
       jti: randomUUID(),
     };
 
+    const secret =
+      process.env.JWT_SECRET || 'super_secret_jwt_access_token_key_2026';
+    const refreshSecret =
+      process.env.REFRESH_JWT_SECRET ||
+      'super_secret_jwt_refresh_token_key_2026';
+
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload),
-      this.jwtService.signAsync(payload, this.refreshTokenConfig),
+      this.jwtService.signAsync(payload, {
+        secret,
+        expiresIn: '1d',
+      }),
+      this.jwtService.signAsync(payload, {
+        secret: refreshSecret,
+        expiresIn: '7d',
+      }),
     ]);
 
     return {
