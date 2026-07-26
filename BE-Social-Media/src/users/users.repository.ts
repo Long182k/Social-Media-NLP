@@ -20,44 +20,49 @@ export class UserRepository {
 
   async findUserByKeyword(keyword: GetUserByKeywordDTO): Promise<User | null> {
     const { userName, id, email, avatarUrl, bio } = keyword;
-    {
-      const user = await this.prisma.user.findFirst({
-        where: {
-          OR: [{ userName }, { id }, { email }, { avatarUrl }, { bio }],
-        },
-        include: {
-          posts: {
-            include: {
-              user: true,
-              comments: {
-                include: {
-                  user: true,
-                  attachments: true,
-                },
+    const orConditions: any[] = [];
+    if (userName) orConditions.push({ userName });
+    if (email) orConditions.push({ email });
+    if (id) orConditions.push({ id });
+    if (avatarUrl) orConditions.push({ avatarUrl });
+    if (bio) orConditions.push({ bio });
+
+    if (orConditions.length === 0) {
+      return null;
+    }
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: orConditions,
+      },
+      include: {
+        posts: {
+          include: {
+            user: true,
+            comments: {
+              include: {
+                user: true,
+                attachments: true,
               },
-              attachments: true,
-              _count: {
-                select: {
-                  likes: true,
-                  comments: true,
-                  bookmarks: true,
-                },
+            },
+            attachments: true,
+            _count: {
+              select: {
+                likes: true,
+                comments: true,
+                bookmarks: true,
               },
             },
           },
-          comments: true,
-          likes: true,
-          followers: true,
-          following: true,
         },
-      });
+        comments: true,
+        likes: true,
+        followers: true,
+        following: true,
+      },
+    });
 
-      if (!user) {
-        throw new NotFoundException('User not found.');
-      }
-
-      return user;
-    }
+    return user;
   }
 
   async findAllUsers(userId: string): Promise<User[]> {
