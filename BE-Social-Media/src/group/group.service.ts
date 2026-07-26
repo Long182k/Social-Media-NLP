@@ -16,17 +16,73 @@ export class GroupService {
   ) {}
 
   async getGroups(userId: string, onlyUserGroups: boolean) {
-    if (onlyUserGroups) {
-      return this.prisma.group.findMany({
-        where: {
-          members: {
-            some: {
-              userId,
-              NOT: {
-                role: GroupRole.PENDING,
+    try {
+      if (onlyUserGroups) {
+        return await this.prisma.group.findMany({
+          where: {
+            members: {
+              some: {
+                userId,
+                NOT: {
+                  role: GroupRole.PENDING,
+                },
               },
             },
           },
+          include: {
+            creator: {
+              select: {
+                id: true,
+                userName: true,
+                avatarUrl: true,
+              },
+            },
+            members: {
+              select: {
+                role: true,
+                user: {
+                  select: {
+                    id: true,
+                    userName: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+            _count: {
+              select: {
+                members: {
+                  where: {
+                    role: {
+                      in: [GroupRole.ADMIN, GroupRole.MEMBER],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      return await this.prisma.group.findMany({
+        where: {
+          OR: [
+            {
+              members: {
+                none: {
+                  userId,
+                },
+              },
+            },
+            {
+              members: {
+                some: {
+                  userId,
+                  role: GroupRole.PENDING,
+                },
+              },
+            },
+          ],
         },
         include: {
           creator: {
@@ -39,13 +95,6 @@ export class GroupService {
           members: {
             select: {
               role: true,
-              user: {
-                select: {
-                  id: true,
-                  userName: true,
-                  avatarUrl: true,
-                },
-              },
             },
           },
           _count: {
@@ -61,54 +110,9 @@ export class GroupService {
           },
         },
       });
+    } catch {
+      return [];
     }
-
-    return this.prisma.group.findMany({
-      where: {
-        OR: [
-          {
-            members: {
-              none: {
-                userId,
-              },
-            },
-          },
-          {
-            members: {
-              some: {
-                userId,
-                role: GroupRole.PENDING,
-              },
-            },
-          },
-        ],
-      },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            userName: true,
-            avatarUrl: true,
-          },
-        },
-        members: {
-          select: {
-            role: true,
-          },
-        },
-        _count: {
-          select: {
-            members: {
-              where: {
-                role: {
-                  in: [GroupRole.ADMIN, GroupRole.MEMBER],
-                },
-              },
-            },
-          },
-        },
-      },
-    });
   }
 
   async createGroup(

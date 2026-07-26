@@ -588,99 +588,106 @@ export class EventsService {
   }
 
   async findMyEvents(userId: string, page: number, limit: number) {
-    const skip = (page - 1) * limit;
-    const [events, total] = await Promise.all([
-      this.prisma.event.findMany({
-        where: {
-          OR: [
-            {
-              creatorId: userId,
-            },
-            {
-              attendees: {
-                some: {
-                  userId,
-                  status: AttendeeStatus.ENROLL,
+    try {
+      const skip = (page - 1) * limit;
+      const [events, total] = await Promise.all([
+        this.prisma.event.findMany({
+          where: {
+            OR: [
+              {
+                creatorId: userId,
+              },
+              {
+                attendees: {
+                  some: {
+                    userId,
+                    status: AttendeeStatus.ENROLL,
+                  },
                 },
               },
-            },
-          ],
-        },
-        skip,
-        take: limit,
-        include: {
-          _count: {
-            select: { attendees: true },
+            ],
           },
-          creator: {
-            select: {
-              id: true,
-              userName: true,
-              avatarUrl: true,
+          skip,
+          take: limit,
+          include: {
+            _count: {
+              select: { attendees: true },
             },
-          },
-          attendees: {
-            select: {
-              userId: true,
-              role: true,
-              status: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      this.prisma.event.count({
-        where: {
-          OR: [
-            {
-              creatorId: userId,
-            },
-            {
-              attendees: {
-                some: {
-                  userId,
-                  status: AttendeeStatus.ENROLL,
-                },
+            creator: {
+              select: {
+                id: true,
+                userName: true,
+                avatarUrl: true,
               },
             },
-          ],
-        },
-      }),
-    ]);
+            attendees: {
+              select: {
+                userId: true,
+                role: true,
+                status: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        }),
+        this.prisma.event.count({
+          where: {
+            OR: [
+              {
+                creatorId: userId,
+              },
+              {
+                attendees: {
+                  some: {
+                    userId,
+                    status: AttendeeStatus.ENROLL,
+                  },
+                },
+              },
+            ],
+          },
+        }),
+      ]);
 
-    return {
-      events: events.map((event) => ({
-        id: event.id,
-        name: event.name,
-        description: event.description,
-        eventAvatar: event.eventAvatar,
-        eventDate: event.eventDate,
-        category: event.category,
-        address: event.address,
-        createdAt: event.createdAt,
-        creator: event.creator,
-        attendees: event.attendees,
-        attendeesCount: event.attendees.filter(
-          (attendee) =>
-            (attendee.role === AttendeeRole.ADMIN ||
-              attendee.role === AttendeeRole.ATTENDEE) &&
-            attendee.status === AttendeeStatus.ENROLL,
-        ).length,
-        activeAttendeesCount: event.attendees.filter(
-          (attendee) =>
-            (attendee.role === AttendeeRole.ADMIN ||
-              attendee.role === AttendeeRole.ATTENDEE) &&
-            attendee.status === AttendeeStatus.ENROLL,
-        ).length,
-      })),
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
+      return {
+        events: events.map((event) => ({
+          id: event.id,
+          name: event.name,
+          description: event.description,
+          eventAvatar: event.eventAvatar,
+          eventDate: event.eventDate,
+          category: event.category,
+          address: event.address,
+          createdAt: event.createdAt,
+          creator: event.creator,
+          attendees: event.attendees,
+          attendeesCount: event.attendees.filter(
+            (attendee) =>
+              (attendee.role === AttendeeRole.ADMIN ||
+                attendee.role === AttendeeRole.ATTENDEE) &&
+              attendee.status === AttendeeStatus.ENROLL,
+          ).length,
+          activeAttendeesCount: event.attendees.filter(
+            (attendee) =>
+              (attendee.role === AttendeeRole.ADMIN ||
+                attendee.role === AttendeeRole.ATTENDEE) &&
+              attendee.status === AttendeeStatus.ENROLL,
+          ).length,
+        })),
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch {
+      return {
+        events: [],
+        meta: { total: 0, page, limit, totalPages: 0 },
+      };
+    }
   }
 }

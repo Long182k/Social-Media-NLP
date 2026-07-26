@@ -383,54 +383,54 @@ export class UsersService {
     userId: string,
     { page, limit }: PaginationParams,
   ) {
-    const skip = (page - 1) * limit;
+    try {
+      const skip = (page - 1) * limit;
 
-    // Get IDs of users that current user is already following
-    const following = await this.prisma.follow.findMany({
-      where: {
-        followerId: userId,
-      },
-      select: {
-        followingId: true,
-      },
-    });
-    const followingIds = following.map((f) => f.followingId);
-    let userIds;
+      const following = await this.prisma.follow.findMany({
+        where: {
+          followerId: userId,
+        },
+        select: {
+          followingId: true,
+        },
+      });
+      const followingIds = following.map((f) => f.followingId);
 
-    // Handle case when user hasn't followed anyone yet
-    if (followingIds.length === 0) {
+      if (followingIds.length === 0) {
+        return {
+          latestBirthday: [],
+        };
+      }
+
+      const users = await this.prisma.$queryRaw<
+        {
+          id: string;
+          userName: string;
+          avatarUrl: string | null;
+          dateOfBirth: Date;
+        }[]
+      >`
+      SELECT id, "userName", "avatarUrl", "dateOfBirth"
+      FROM users
+      WHERE isActive = true 
+        AND dateOfBirth IS NOT NULL
+        AND MONTH(dateOfBirth) = ${new Date().getMonth() + 1}
+        AND DAY(dateOfBirth) >= ${new Date().getDate()}
+        AND id IN (${Prisma.join(followingIds)})
+      ORDER BY DAY(dateOfBirth) ASC
+      LIMIT ${limit}
+      OFFSET ${skip}
+      `;
+
+      return {
+        latestBirthday: users.map((user) => ({
+          ...user,
+        })),
+      };
+    } catch {
       return {
         latestBirthday: [],
       };
-    } else {
-      userIds = [...followingIds];
     }
-
-    // if the current month is January -> new Date().getMonth() = 0 (0-11)
-    const users = await this.prisma.$queryRaw<
-      {
-        id: string;
-        userName: string;
-        avatarUrl: string | null;
-        dateOfBirth: Date;
-      }[]
-    >`
-    SELECT id, "userName", "avatarUrl", "dateOfBirth"
-    FROM users
-    WHERE isActive = true 
-      AND dateOfBirth IS NOT NULL
-      AND MONTH(dateOfBirth) = ${new Date().getMonth() + 1}
-      AND DAY(dateOfBirth) >= ${new Date().getDate()}
-      AND id IN (${Prisma.join(userIds)})
-    ORDER BY DAY(dateOfBirth) ASC
-    LIMIT ${limit}
-    OFFSET ${skip}
-    `;
-
-    return {
-      latestBirthday: users.map((user) => ({
-        ...user,
-      })),
-    };
   }
 }

@@ -75,44 +75,51 @@ export class BookmarkService {
   }
 
   async getBookmarks(userId: string) {
-    const [bookmarks, total] = await Promise.all([
-      this.prisma.bookmark.findMany({
-        where: {
-          userId,
-        },
-        include: {
-          post: {
-            include: {
-              user: true,
-              attachments: true,
-              _count: {
-                select: {
-                  likes: true,
-                  comments: true,
-                  bookmarks: true,
+    try {
+      const [bookmarks, total] = await Promise.all([
+        this.prisma.bookmark.findMany({
+          where: {
+            userId,
+          },
+          include: {
+            post: {
+              include: {
+                user: true,
+                attachments: true,
+                _count: {
+                  select: {
+                    likes: true,
+                    comments: true,
+                    bookmarks: true,
+                  },
                 },
               },
             },
           },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
+          orderBy: {
+            createdAt: 'desc',
+          },
+        }),
 
-      this.prisma.bookmark.count({
-        where: {
-          userId,
-        },
-      }),
-    ]);
+        this.prisma.bookmark.count({
+          where: {
+            userId,
+          },
+        }),
+      ]);
 
-    return {
-      data: bookmarks,
-      meta: {
-        total,
-      },
-    };
+      return {
+        data: bookmarks,
+        meta: {
+          total,
+        },
+      };
+    } catch {
+      return {
+        data: [],
+        meta: { total: 0 },
+      };
+    }
   }
 
   async remove(id: string) {
