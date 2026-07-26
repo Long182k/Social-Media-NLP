@@ -1,27 +1,27 @@
 {
   "rewrites": [
     {
-      "source": "/auth/(.*)",
-      "destination": "https://social-media-nlp-be.vercel.app/auth/$1"
+      "source": "/auth/:path*",
+      "destination": "https://social-media-nlp-be.vercel.app/auth/:path*"
     },
     {
-      "source": "/users/(.*)",
-      "destination": "https://social-media-nlp-be.vercel.app/users/$1"
+      "source": "/users/:path*",
+      "destination": "https://social-media-nlp-be.vercel.app/users/:path*"
     },
     {
-      "source": "/posts/(.*)",
-      "destination": "https://social-media-nlp-be.vercel.app/posts/$1"
+      "source": "/posts/:path*",
+      "destination": "https://social-media-nlp-be.vercel.app/posts/:path*"
     },
     {
-      "source": "/comment/(.*)",
-      "destination": "https://social-media-nlp-be.vercel.app/comment/$1"
+      "source": "/comment/:path*",
+      "destination": "https://social-media-nlp-be.vercel.app/comment/:path*"
     },
     {
-      "source": "/graphql(.*)",
-      "destination": "https://social-media-nlp-be.vercel.app/graphql$1"
+      "source": "/graphql",
+      "destination": "https://social-media-nlp-be.vercel.app/graphql"
     },
     {
-      "source": "/((?!assets/|.*\\..*).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
