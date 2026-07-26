@@ -133,34 +133,59 @@ export class AdminService {
         ],
       }),
 
-      // Get user growth data by day
-      this.prisma.$queryRaw<UserGrowthData[]>`
-        SELECT 
-          DATE_FORMAT(createdAt, '%Y-%m-%d') as day,
-          DATE_FORMAT(createdAt, '%W') as dayName,
-          COUNT(*) as count
-        FROM users
-        WHERE createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY DATE_FORMAT(createdAt, '%Y-%m-%d'), DATE_FORMAT(createdAt, '%W')
-        ORDER BY day DESC
-        LIMIT 7
-      `,
+      // Get user growth data by day using cross-database Prisma aggregation
+      (async () => {
+        const now = new Date();
+        const daysMap = new Map<string, { day: string; dayName: string; count: number }>();
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+          const dayStr = d.toISOString().split('T')[0];
+          daysMap.set(dayStr, { day: dayStr, dayName: dayNames[d.getDay()], count: 0 });
+        }
+
+        try {
+          const recentUsers = await this.prisma.user.findMany({
+            where: {
+              createdAt: {
+                gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
+              },
+            },
+            select: { createdAt: true },
+          });
+
+          recentUsers.forEach((u) => {
+            const dayStr = u.createdAt.toISOString().split('T')[0];
+            if (daysMap.has(dayStr)) {
+              daysMap.get(dayStr)!.count++;
+            }
+          });
+        } catch {
+          // Ignore
+        }
+
+        return Array.from(daysMap.values());
+      })(),
     ]);
 
     // Calculate sentiment ratios
     const calculateSentimentRatio = (data: any[]) => {
-      const total = data.reduce((acc, curr) => acc + curr._count.sentiment, 0);
+      const total = data.reduce((acc, curr) => acc + (curr._count?.sentiment || 0), 0);
+      if (!total) {
+        return { positive: 0, negative: 0, moderate: 0, total: 0 };
+      }
       return {
         positive:
-          ((data.find((d) => d.sentiment === 'GOOD')?._count.sentiment || 0) /
+          ((data.find((d) => d.sentiment === 'GOOD')?._count?.sentiment || 0) /
             total) *
           100,
         negative:
-          ((data.find((d) => d.sentiment === 'BAD')?._count.sentiment || 0) /
+          ((data.find((d) => d.sentiment === 'BAD')?._count?.sentiment || 0) /
             total) *
           100,
         moderate:
-          ((data.find((d) => d.sentiment === 'MODERATE')?._count.sentiment ||
+          ((data.find((d) => d.sentiment === 'MODERATE')?._count?.sentiment ||
             0) /
             total) *
           100,

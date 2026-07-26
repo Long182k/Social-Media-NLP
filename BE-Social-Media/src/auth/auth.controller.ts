@@ -79,8 +79,13 @@ export class AuthController {
 
   @Post('/signout')
   @Public()
-  async signOut(@Request() req, @Res({ passthrough: true }) res) {
-    const rt = req.cookies?.['refreshToken'] || null;
+  async signOut(@Request() req, @Res({ passthrough: true }) res, @Body() body: any) {
+    const rt =
+      req.cookies?.['refreshToken'] ||
+      body?.refreshToken ||
+      (req.headers?.authorization?.startsWith('Bearer ')
+        ? req.headers.authorization.substring(7).trim()
+        : null);
 
     return await this.authService.signOut(rt, res);
   }

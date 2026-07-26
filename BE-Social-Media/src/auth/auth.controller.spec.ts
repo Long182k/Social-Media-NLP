@@ -287,7 +287,7 @@ describe('AuthController', () => {
         message: 'Sign out successfully',
       } as any);
 
-      const result = await controller.signOut(req, res);
+      const result = await controller.signOut(req, res, {});
 
       expect(authService.signOut).toHaveBeenCalledWith('rt_value', res);
       expect(result).toEqual({ message: 'Sign out successfully' });
@@ -305,7 +305,7 @@ describe('AuthController', () => {
         message: 'Sign out successfully',
       } as any);
 
-      const result = await controller.signOut(req, res);
+      const result = await controller.signOut(req, res, {});
 
       expect(authService.signOut).toHaveBeenCalledWith(null, res);
       expect(result).toEqual({ message: 'Sign out successfully' });

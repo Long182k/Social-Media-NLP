@@ -355,21 +355,34 @@ export class AuthService {
     };
   }
 
-  async signOut(oldRefreshToken: string, res) {
+  async signOut(oldRefreshToken: string, res: any) {
     try {
-      const { sub: userId, jti } =
-        await this.verifyRefreshToken(oldRefreshToken);
-
-      res.clearCookie('refreshToken');
-
-      // revoke old RT
-      await this.revokeRefreshToken(userId, jti);
-      return {
-        message: 'Sign out successfully',
-      };
-    } catch (error) {
-      throw new UnauthorizedException('Sign out failed', error.message);
+      if (oldRefreshToken) {
+        let payload: any;
+        try {
+          payload = await this.verifyRefreshToken(oldRefreshToken);
+        } catch {
+          payload = this.jwtService.decode(oldRefreshToken);
+        }
+        if (payload?.userId && payload?.jti) {
+          await this.revokeRefreshToken(payload.userId, payload.jti);
+        }
+      }
+    } catch {
+      // Ignore token revocation error
     }
+
+    try {
+      if (res && res.clearCookie) {
+        res.clearCookie('refreshToken');
+      }
+    } catch {
+      // Ignore
+    }
+
+    return {
+      message: 'Sign out successfully',
+    };
   }
 
   async getUserById(id: string) {
