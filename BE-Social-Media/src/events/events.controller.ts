@@ -73,21 +73,29 @@ export class EventsController {
   }
 
   @Get('/all/discover')
-  findDiscoveryEvents(
+  async findDiscoveryEvents(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @CurrentUser('userId') userId: string,
   ) {
-    return this.eventsService.findDiscoveryEvents(userId, +page, +limit);
+    try {
+      return await this.eventsService.findDiscoveryEvents(userId, +page, +limit);
+    } catch (err) {
+      return { events: [], meta: { total: 0, page: +page, limit: +limit, totalPages: 0 } };
+    }
   }
 
   @Get('/all/my-events')
-  findMyEvents(
+  async findMyEvents(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @CurrentUser('userId') userId: string,
   ) {
-    return this.eventsService.findMyEvents(userId, +page, +limit);
+    try {
+      return await this.eventsService.findMyEvents(userId, +page, +limit);
+    } catch (err) {
+      return { events: [], meta: { total: 0, page: +page, limit: +limit, totalPages: 0 } };
+    }
   }
 
   @Get(':id')
