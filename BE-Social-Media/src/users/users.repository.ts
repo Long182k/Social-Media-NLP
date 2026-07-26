@@ -66,40 +66,48 @@ export class UserRepository {
   }
 
   async findAllUsers(userId: string): Promise<User[]> {
-    return this.prisma.user.findMany({
-      where: {
-        NOT: {
-          id: userId,
+    try {
+      return await this.prisma.user.findMany({
+        where: {
+          NOT: {
+            id: userId,
+          },
         },
-      },
-    });
+      });
+    } catch {
+      return [];
+    }
   }
 
   async findAvailableContact(userId: string): Promise<User[]> {
-    const existingChatRoom = await this.prisma.chatRoom.findMany({
-      where: {
-        participants: {
-          some: { userId },
+    try {
+      const existingChatRoom = await this.prisma.chatRoom.findMany({
+        where: {
+          participants: {
+            some: { userId },
+          },
         },
-      },
-      include: {
-        participants: true,
-      },
-    });
-
-    const availableContactIds = existingChatRoom.flatMap((room) =>
-      room.participants
-        .filter((participant) => participant.userId !== userId)
-        .map((participant) => participant.userId),
-    );
-
-    return this.prisma.user.findMany({
-      where: {
-        id: {
-          notIn: [...availableContactIds, userId],
+        include: {
+          participants: true,
         },
-      },
-    });
+      });
+
+      const availableContactIds = existingChatRoom.flatMap((room) =>
+        room.participants
+          .filter((participant) => participant.userId !== userId)
+          .map((participant) => participant.userId),
+      );
+
+      return await this.prisma.user.findMany({
+        where: {
+          id: {
+            notIn: [...availableContactIds, userId],
+          },
+        },
+      });
+    } catch {
+      return [];
+    }
   }
 
   async createUser(data: CreateUserDTO): Promise<User> {
