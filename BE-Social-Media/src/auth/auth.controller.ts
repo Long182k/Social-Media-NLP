@@ -77,6 +77,7 @@ export class AuthController {
     return req.user;
   }
 
+  @Public()
   @Get('profile/:id')
   getProfileById(@Param('id') id: string) {
     return this.authService.getUserById(id);
