@@ -1,3 +1,4 @@
+// Force regenerate PostgreSQL schema for Neon DB v2
 generator client {
   provider      = "prisma-client-js"
   output        = "../node_modules/.prisma/client"

@@ -9,9 +9,9 @@
     "node": "24.x"
   },
   "scripts": {
-    "postinstall": "prisma generate",
-    "build": "prisma generate && nest build -b swc --type-check",
-    "vercel-build": "prisma generate && nest build -b swc --type-check",
+    "postinstall": "prisma generate --schema=prisma/schema.prisma",
+    "build": "prisma generate --schema=prisma/schema.prisma && nest build -b swc --type-check",
+    "vercel-build": "prisma generate --schema=prisma/schema.prisma && nest build -b swc --type-check",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start -b swc --type-check --watch",
