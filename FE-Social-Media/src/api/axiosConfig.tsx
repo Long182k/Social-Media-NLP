@@ -24,38 +24,57 @@ let accessToken: string | undefined = undefined;
 let isRefreshing = false;
 let pendingQueue: Array<(t: string) => void> = [];
 
-// Initialize access token from store (call this after store is initialized)
-export const initializeAxiosAuth = () => {
-  try {
-    const { userInfo } = getStoreActions();
-    if (userInfo?.accessToken) {
-      accessToken = userInfo.accessToken;
-      console.log("Axios auth initialized with existing token");
-    }
-  } catch (error) {
-    console.warn("Could not initialize axios auth:", error);
-  }
-};
-
 export const setAccessToken = (token: string | undefined) => {
   accessToken = token;
 
   try {
     const { updateUserInfo } = getStoreActions();
-    updateUserInfo({ accessToken: token });
-
-    // Reset Apollo Client auth context
-    apolloClient.resetStore();
+    if (token) {
+      updateUserInfo({ accessToken: token });
+    }
   } catch (error) {
     console.warn("Store not yet initialized:", error);
   }
 };
 
+export const getActiveAccessToken = (): string | undefined => {
+  if (accessToken) return accessToken;
+
+  try {
+    const storeToken = getStoreActions()?.userInfo?.accessToken;
+    if (storeToken) {
+      accessToken = storeToken;
+      return storeToken;
+    }
+  } catch (e) {
+    // Store might not be initialized yet
+  }
+
+  if (typeof window !== "undefined") {
+    try {
+      const rawStorage = localStorage.getItem("auth_storage");
+      if (rawStorage) {
+        const parsed = JSON.parse(rawStorage);
+        const savedToken = parsed?.state?.userInfo?.accessToken;
+        if (savedToken) {
+          accessToken = savedToken;
+          return savedToken;
+        }
+      }
+    } catch (e) {
+      console.warn("Could not read auth_storage:", e);
+    }
+  }
+
+  return undefined;
+};
+
 //  Request Interceptor: Attach token
 axiosClient.interceptors.request.use(
   (config) => {
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    const activeToken = getActiveAccessToken();
+    if (activeToken) {
+      config.headers["Authorization"] = `Bearer ${activeToken}`;
     }
     return config;
   },

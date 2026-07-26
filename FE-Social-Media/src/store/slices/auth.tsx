@@ -11,7 +11,7 @@ import {
   RegisterNewUserParams,
   User,
 } from "../../@util/types/auth.type";
-import { axiosClient } from "../../api/axiosConfig";
+import { axiosClient, setAccessToken } from "../../api/axiosConfig";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
@@ -33,11 +33,19 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
   socket: null,
   onlineUsers: [],
   isSocketConnected: false,
-  addUserInfo: (userInfo: User) => set({ userInfo }),
+  addUserInfo: (userInfo: User) => {
+    if (userInfo?.accessToken) {
+      setAccessToken(userInfo.accessToken);
+    }
+    set({ userInfo });
+  },
   getUserInfo: () => get().userInfo,
   updateUserInfo: (updates: Partial<User>) =>
     set((state) => {
       const currentUserInfo = state.userInfo;
+      if (updates?.accessToken) {
+        setAccessToken(updates.accessToken);
+      }
       return {
         userInfo:
           currentUserInfo && Object.keys(currentUserInfo).length > 0
@@ -45,14 +53,19 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
             : (updates as User),
       };
     }),
-  removeUserInfo: () =>
+  removeUserInfo: () => {
+    setAccessToken(undefined);
     set({
       userInfo: undefined,
-    }),
+    });
+  },
   signup: async (data: RegisterNewUserParams): Promise<RegisterResponse> => {
     try {
       const { data: response } = await axiosClient.post("/auth/register", data);
       set({ userInfo: response });
+      if (response?.accessToken) {
+        setAccessToken(response.accessToken);
+      }
 
       get().connectSocket();
       return response;
@@ -69,6 +82,9 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
       );
 
       set({ userInfo: dataResponse });
+      if (dataResponse?.accessToken) {
+        setAccessToken(dataResponse.accessToken);
+      }
 
       get().connectSocket();
 
@@ -81,6 +97,7 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
 
   logout: async () => {
     try {
+      setAccessToken(undefined);
       const res = await axiosClient.post(`/auth/signout`);
 
       set({

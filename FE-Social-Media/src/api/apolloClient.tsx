@@ -1,11 +1,9 @@
 import { createClient } from "graphql-ws";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { ApolloClient, InMemoryCache, split, HttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, split, HttpLink, ApolloLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { useAppStore } from "../store";
-
-const state = useAppStore.getState();
-const token = state.userInfo.accessToken;
+import { getActiveAccessToken } from "./axiosConfig";
 
 // Build WebSocket URL automatically from server URL (http -> ws, https -> wss)
 const serverUrl =
@@ -15,17 +13,16 @@ const baseForWs = overrideWsUrl || serverUrl;
 
 // http(s) -> ws(s)
 const wsBase = baseForWs.replace(/^http(s?):\/\//, "ws$1://");
-console.log("🚀 ~ wsBase:", wsBase);
-// Append GraphQL path
 const wsUrl = `${wsBase}/graphql`;
-
-console.log(`Check WebSocket URL: ${wsUrl}`);
 
 const wsLink = new GraphQLWsLink(
   createClient({
     url: wsUrl,
-    connectionParams: {
-      Authorization: token ? `Bearer ${token}` : "",
+    connectionParams: () => {
+      const activeToken = getActiveAccessToken();
+      return {
+        Authorization: activeToken ? `Bearer ${activeToken}` : "",
+      };
     },
     on: {
       connected: () => console.log("✅ GraphQL WebSocket connected"),
@@ -37,9 +34,16 @@ const wsLink = new GraphQLWsLink(
 
 const httpLink = new HttpLink({
   uri: (import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app") + "/graphql",
-  headers: {
-    Authorization: token ? `Bearer ${token}` : "",
-  },
+});
+
+const authLink = setContext((_, { headers }) => {
+  const activeToken = getActiveAccessToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: activeToken ? `Bearer ${activeToken}` : "",
+    },
+  };
 });
 
 const splitLink = split(
@@ -50,7 +54,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpLink
+  authLink.concat(httpLink)
 );
 
 export const apolloClient = new ApolloClient({
