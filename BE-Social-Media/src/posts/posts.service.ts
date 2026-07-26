@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { PaginationDto } from '../common/pagination.dto';
+import { MediaType } from '@prisma/client';
 import { CloudinaryService } from '../file/file.service';
 import { AttachmentsUploadedType } from '../file/file.type';
 import { NlpService } from '../nlp/nlp.service';
@@ -34,7 +35,7 @@ export class PostsService {
         await this.cloudinaryService.uploadMultipleFiles(files);
 
       attachmentsUploaded = uploadedFiles.map((file) => ({
-        type: file.type as 'image' | 'video',
+        type: file.type === 'video' ? MediaType.VIDEO : MediaType.IMAGE,
         url: file.url,
       }));
     }

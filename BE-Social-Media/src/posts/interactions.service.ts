@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { NotificationType, Prisma } from '@prisma/client';
+import { MediaType, NotificationType, Prisma } from '@prisma/client';
 import Redlock from 'redlock';
 import { CloudinaryService } from '../file/file.service';
 import { AttachmentsUploadedType } from '../file/file.type';
@@ -187,7 +187,7 @@ export class InteractionsService {
         await this.cloudinaryService.uploadMultipleFiles(files);
 
       attachmentsUploaded = uploadedFiles.map((file) => ({
-        type: file.type as 'image' | 'video',
+        type: file.type === 'video' ? MediaType.VIDEO : MediaType.IMAGE,
         url: file.url,
       }));
     }

@@ -1,4 +1,6 @@
+import { MediaType } from '@prisma/client';
+
 export type AttachmentsUploadedType = {
-  type: 'image' | 'video';
+  type: MediaType;
   url: string;
 };

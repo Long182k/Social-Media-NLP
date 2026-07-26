@@ -1,5 +1,5 @@
 if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = 'mysql://root:password@localhost:3306/social_media';
+  process.env.DATABASE_URL = 'postgresql://neondb_owner:npg_knzcaILw5O9A@ep-super-bird-az3gx34q-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
 }
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'super_secret_jwt_access_token_key_2026';

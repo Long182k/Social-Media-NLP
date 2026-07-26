@@ -49,7 +49,7 @@ export class PostsResolver {
     @CurrentUser('userId') userId: string,
     @Args('input') input: CreatePostInput,
     @UploadedFiles() files: Express.Multer.File[],
-  ): Promise<Post> {
+  ): Promise<any> {
     const post = await this.postsService.create(userId, input, files);
 
     // Publish the new post for subscriptions
@@ -63,7 +63,7 @@ export class PostsResolver {
     @CurrentUser('userId') userId: string,
     @Args('id', { type: () => ID }) id: string,
     @Args('input') input: UpdatePostInput,
-  ): Promise<Post> {
+  ): Promise<any> {
     return this.postsService.update(id, userId, input);
   }
 

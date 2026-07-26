@@ -12,7 +12,7 @@ export class PrismaService
         db: {
           url:
             process.env.DATABASE_URL ||
-            'mysql://root:password@localhost:3306/social_media',
+            'postgresql://neondb_owner:npg_knzcaILw5O9A@ep-super-bird-az3gx34q-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
         },
       },
     });
@@ -21,18 +21,18 @@ export class PrismaService
   async onModuleInit() {
     try {
       await this.$connect();
-      console.log('Connect to MYSQL successfully');
+      console.log('Connected to PostgreSQL successfully');
     } catch (error) {
-      console.error('Failed to connect to MySQL database during startup:', error);
+      console.error('Failed to connect to PostgreSQL database during startup:', error);
     }
   }
 
   async onModuleDestroy() {
     try {
       await this.$disconnect();
-      console.log('Disconnect to MYSQL successfully');
+      console.log('Disconnected from PostgreSQL successfully');
     } catch (error) {
-      console.error('Error disconnecting from MySQL:', error);
+      console.error('Error disconnecting from PostgreSQL:', error);
     }
   }
 }
