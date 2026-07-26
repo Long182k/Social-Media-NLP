@@ -2,7 +2,8 @@ import axios from "axios";
 import { apolloClient } from "./apolloClient";
 import { useAppStore } from "../store";
 
-const API_URL = import.meta.env.VITE_SERVER_URL;
+const API_URL =
+  import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app";
 
 export const axiosInitialClient = axios.create({
   baseURL: API_URL,

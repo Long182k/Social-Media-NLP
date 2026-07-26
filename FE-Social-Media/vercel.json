@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/auth/(.*)",
+      "destination": "https://social-media-nlp-be.vercel.app/auth/$1"
+    },
+    {
+      "source": "/users/(.*)",
+      "destination": "https://social-media-nlp-be.vercel.app/users/$1"
+    },
+    {
+      "source": "/posts/(.*)",
+      "destination": "https://social-media-nlp-be.vercel.app/posts/$1"
+    },
+    {
+      "source": "/comment/(.*)",
+      "destination": "https://social-media-nlp-be.vercel.app/comment/$1"
+    },
+    {
+      "source": "/graphql(.*)",
+      "destination": "https://social-media-nlp-be.vercel.app/graphql$1"
+    },
+    {
+      "source": "/((?!assets/|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

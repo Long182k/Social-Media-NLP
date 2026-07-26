@@ -9,7 +9,7 @@ const token = state.userInfo.accessToken;
 
 // Build WebSocket URL automatically from server URL (http -> ws, https -> wss)
 const serverUrl =
-  import.meta.env.VITE_SERVER_URL || "http://localhost:3000/api";
+  import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app";
 const overrideWsUrl = import.meta.env.VITE_WS_URL;
 const baseForWs = overrideWsUrl || serverUrl;
 
@@ -36,7 +36,7 @@ const wsLink = new GraphQLWsLink(
 );
 
 const httpLink = new HttpLink({
-  uri: import.meta.env.VITE_SERVER_URL + "/graphql",
+  uri: (import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app") + "/graphql",
   headers: {
     Authorization: token ? `Bearer ${token}` : "",
   },
