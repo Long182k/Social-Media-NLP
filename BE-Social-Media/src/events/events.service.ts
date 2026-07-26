@@ -50,79 +50,57 @@ export class EventsService {
   }
 
   async findAll(page: number, limit: number) {
-    try {
-      const skip = (page - 1) * limit;
-      const [events, total] = await Promise.all([
-        this.prisma.event.findMany({
-          skip,
-          take: limit,
-          include: {
-            _count: {
-              select: { attendees: true },
-            },
-            creator: {
-              select: {
-                id: true,
-                userName: true,
-                avatarUrl: true,
-              },
-            },
-            attendees: {
-              select: {
-                userId: true,
-                role: true,
-                status: true,
-              },
+    const skip = (page - 1) * limit;
+    const [events, total] = await Promise.all([
+      this.prisma.event.findMany({
+        skip,
+        take: limit,
+        include: {
+          _count: {
+            select: { attendees: true },
+          },
+          creator: {
+            select: {
+              id: true,
+              userName: true,
+              avatarUrl: true,
             },
           },
-          orderBy: {
-            createdAt: 'desc',
+          attendees: {
+            select: {
+              userId: true,
+              role: true,
+              status: true,
+            },
           },
-        }),
-        this.prisma.event.count(),
-      ]);
-
-      // Always return real DB result
-      return {
-        events: events.map((event) => ({
-          id: event.id,
-          name: event.name,
-          description: event.description,
-          eventAvatar: event.eventAvatar,
-          eventDate: event.eventDate,
-          category: event.category,
-          address: event.address,
-          createdAt: event.createdAt,
-          creator: event.creator,
-          attendees: event.attendees,
-          attendeesCount: event._count.attendees,
-          activeAttendeesCount: event.attendees.length,
-        })),
-        meta: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
         },
-      };
-    } catch (err) {
-      console.error('[EventsService.findAll] DB error, using mock:', err?.message);
-    }
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.event.count(),
+    ]);
 
-    const start = (page - 1) * limit;
-    const paginated = MOCK_EVENTS.slice(start, start + limit);
     return {
-      events: paginated.map((evt) => ({
-        ...evt,
-        attendees: [],
-        attendeesCount: evt._count.attendees,
-        activeAttendeesCount: evt._count.attendees,
+      events: events.map((event) => ({
+        id: event.id,
+        name: event.name,
+        description: event.description,
+        eventAvatar: event.eventAvatar,
+        eventDate: event.eventDate,
+        category: event.category,
+        address: event.address,
+        createdAt: event.createdAt,
+        creator: event.creator,
+        attendees: event.attendees,
+        attendeesCount: event._count.attendees,
+        activeAttendeesCount: event.attendees.length,
       })),
       meta: {
-        total: MOCK_EVENTS.length,
+        total,
         page,
         limit,
-        totalPages: Math.ceil(MOCK_EVENTS.length / limit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

@@ -8,7 +8,6 @@ import {
   UpdateUserDto,
 } from './dto/update-user.dto';
 import { UserRepository } from './users.repository';
-import { MOCK_USERS } from '../common/mock-data';
 
 interface PaginationParams {
   page: number;
@@ -294,8 +293,7 @@ export class UsersService {
   }
 
   async getSuggestedUsers(userId: string, { page, limit }: PaginationParams) {
-    try {
-      const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
       const following = await this.prisma.follow.findMany({
         where: {
@@ -372,20 +370,6 @@ export class UsersService {
           totalPages: Math.ceil(total / limit),
         },
       };
-    } catch (err) {
-      console.error('[UsersService.getSuggestions] DB error, using mock:', err?.message);
-    }
-
-    const mockSuggestions = MOCK_USERS.slice(0, limit).map((user) => ({
-      ...user,
-      followersCount: 15,
-      followingCount: 10,
-    }));
-
-    return {
-      suggestions: mockSuggestions,
-      pagination: { total: MOCK_USERS.length, page, limit, totalPages: Math.ceil(MOCK_USERS.length / limit) },
-    };
   }
 
   async getRecentBirthdayUsers(

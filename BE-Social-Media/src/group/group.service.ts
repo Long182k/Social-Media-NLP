@@ -7,7 +7,6 @@ import { PrismaService } from '../prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GroupRole, Role } from '@prisma/client';
 import { CloudinaryService } from '../file/file.service';
-import { MOCK_GROUPS } from '../common/mock-data';
 
 @Injectable()
 export class GroupService {
@@ -17,8 +16,7 @@ export class GroupService {
   ) {}
 
   async getGroups(userId: string, onlyUserGroups: boolean) {
-    try {
-      if (onlyUserGroups) {
+    if (onlyUserGroups) {
         return await this.prisma.group.findMany({
           where: {
             members: {
@@ -113,14 +111,6 @@ export class GroupService {
       });
 
       return groups;
-    } catch (err) {
-      console.error('[GroupService.findAll] DB error, using mock:', err?.message);
-    }
-
-    return MOCK_GROUPS.map((g) => ({
-      ...g,
-      members: [{ role: 'MEMBER' }],
-    }));
   }
 
   async createGroup(

@@ -10,7 +10,6 @@ import { MediaType } from '@prisma/client';
 import { CloudinaryService } from '../file/file.service';
 import { AttachmentsUploadedType } from '../file/file.type';
 import { NlpService } from '../nlp/nlp.service';
-import { MOCK_POSTS } from '../common/mock-data';
 
 @Injectable()
 export class PostsService {
@@ -69,71 +68,50 @@ export class PostsService {
     const search = paginationDto?.search || undefined;
     const skip = (page - 1) * limit;
 
-    let lastError = '';
-    try {
-      const [posts, total] = await Promise.all([
-        this.prisma.post.findMany({
-          skip,
-          take: limit,
-          where: {
-            content: search ? { contains: search } : undefined,
-            groupId: null,
-          },
-          include: {
-            user: true,
-            comments: {
-              include: {
-                user: true,
-                attachments: true,
-              },
-            },
-            attachments: true,
-            _count: {
-              select: {
-                likes: true,
-                comments: true,
-                bookmarks: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        }),
-        this.prisma.post.count({
-          where: {
-            content: search ? { contains: search } : undefined,
-            groupId: null,
-          },
-        }),
-      ]);
-
-      // Always return real DB result (even if empty array)
-      return {
-        data: posts,
-        meta: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
+    const [posts, total] = await Promise.all([
+      this.prisma.post.findMany({
+        skip,
+        take: limit,
+        where: {
+          content: search ? { contains: search } : undefined,
+          groupId: null,
         },
-      };
-    } catch (err: any) {
-      lastError = err?.stack || err?.message || String(err);
-      console.error('[PostsService.findAll] DB error, falling back to mock:', lastError);
-    }
-
-    const start = (page - 1) * limit;
-    const paginatedMock = MOCK_POSTS.slice(start, start + limit);
+        include: {
+          user: true,
+          comments: {
+            include: {
+              user: true,
+              attachments: true,
+            },
+          },
+          attachments: true,
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+              bookmarks: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.post.count({
+        where: {
+          content: search ? { contains: search } : undefined,
+          groupId: null,
+        },
+      }),
+    ]);
 
     return {
-      data: paginatedMock,
+      data: posts,
       meta: {
-        total: MOCK_POSTS.length,
+        total,
         page,
         limit,
-        totalPages: Math.ceil(MOCK_POSTS.length / limit),
-        dbError: lastError,
+        totalPages: Math.ceil(total / limit),
       },
     };
   }
