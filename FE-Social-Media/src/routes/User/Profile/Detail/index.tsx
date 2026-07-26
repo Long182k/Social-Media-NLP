@@ -35,18 +35,20 @@ function DetailPageComponent({
   const { userInfo } = useAppStore();
   const userId = userInfo?.userId || "";
 
-  const ownPosts = userDetail?.posts.filter((post) => post.userId === userId);
+  const ownPosts = Array.isArray(userDetail?.posts)
+    ? userDetail.posts.filter((post) => post?.userId === userId)
+    : [];
 
   const ownImages: Attachment[] = ownPosts
-    ?.filter((post) => post.attachments.length)
+    .filter((post) => post?.attachments?.length)
     .flatMap((post) =>
-      post.attachments.filter((post) => post.type === "image")
+      (post.attachments || []).filter((item) => item?.type === "image")
     );
 
   const ownVideos: Attachment[] = ownPosts
-    ?.filter((post) => post.attachments.length)
+    .filter((post) => post?.attachments?.length)
     .flatMap((post) =>
-      post.attachments.filter((post) => post.type === "video")
+      (post.attachments || []).filter((item) => item?.type === "video")
     );
 
   // Format date for display

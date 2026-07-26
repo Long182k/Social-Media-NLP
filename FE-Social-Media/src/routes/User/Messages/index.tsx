@@ -408,8 +408,8 @@ function MessageApp({ currentUserId, isDarkMode }: MessageProps) {
           />
 
           <List
-            dataSource={chatRoomsQuery?.filter(
-              (room) => room.type === "DIRECT"
+            dataSource={(chatRoomsQuery || []).filter(
+              (room) => room?.type === "DIRECT"
             )}
             renderItem={(room) => (
               <List.Item

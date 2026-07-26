@@ -394,6 +394,7 @@ export class AuthService {
       isActive: true,
       bio: 'Fullstack Developer & NLP enthusiast',
       createdAt: new Date(),
+      posts: [],
     };
   }
 
