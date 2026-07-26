@@ -41,7 +41,7 @@ export const MOCK_POSTS = Array.from({ length: 40 }).map((_, index) => {
     attachments: index % 3 === 0 ? [
       {
         id: `mock-att-${index + 1}`,
-        type: 'image',
+        type: 'IMAGE',
         url: `https://picsum.photos/seed/post${index + 1}/600/400`,
         postId: `mock-post-id-${index + 1}`,
         createdAt: new Date(),

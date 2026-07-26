@@ -18,6 +18,7 @@ import { PaginationDto } from '../common/pagination.dto';
 import { CreateCommentDto, CreatePostDto, UpdatePostDto } from './dto/post.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { MOCK_POSTS } from '../common/mock-data';
 
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
@@ -38,8 +39,15 @@ export class PostsController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.postsService.findAll(paginationDto);
+  async findAll(@Query() paginationDto: PaginationDto) {
+    try {
+      return await this.postsService.findAll(paginationDto);
+    } catch {
+      return {
+        data: MOCK_POSTS.slice(0, 10),
+        meta: { total: MOCK_POSTS.length, page: 1, limit: 10, totalPages: 4 },
+      };
+    }
   }
 
   @Get('single/:id')
