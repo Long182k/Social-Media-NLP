@@ -39,13 +39,18 @@ export class AuthController {
   async login(@Res({ passthrough: true }) res, @CurrentUser() user: any) {
     const loginInfo = await this.authService.login(user);
 
-    // set HttpOnly cookie for refresh token
-    res.cookie('refreshToken', loginInfo.refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+    try {
+      if (res && typeof res.cookie === 'function') {
+        res.cookie('refreshToken', loginInfo.refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none',
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
+      }
+    } catch (e) {
+      console.warn('Cookie setting warning:', e);
+    }
 
     delete loginInfo.refreshToken;
 

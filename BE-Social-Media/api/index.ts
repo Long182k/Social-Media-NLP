@@ -1,3 +1,13 @@
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'mysql://root:password@localhost:3306/social_media';
+}
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = 'super_secret_jwt_access_token_key_2026';
+}
+if (!process.env.REFRESH_JWT_SECRET) {
+  process.env.REFRESH_JWT_SECRET = 'super_secret_jwt_refresh_token_key_2026';
+}
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
