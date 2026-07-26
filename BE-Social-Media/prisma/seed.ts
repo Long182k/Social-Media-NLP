@@ -293,6 +293,22 @@ async function main() {
   }
   console.log('✅ Seeded chat rooms and messages.');
 
+  // 11. Seed 100 Bookmarks
+  console.log('11. Seeding 100 bookmarks...');
+  const bookmarkData = [];
+  for (let i = 0; i < 100; i++) {
+    const userId = userIds[i % userIds.length];
+    const postId = posts[i % posts.length]?.id;
+    if (userId && postId) {
+      bookmarkData.push({ userId, postId });
+    }
+  }
+  await prisma.bookmark.createMany({
+    data: bookmarkData,
+    skipDuplicates: true,
+  });
+  console.log('✅ Seeded bookmarks.');
+
   console.log('🎉 Database bulk seeding completed successfully! All tables contain 100+ records.');
 }
 

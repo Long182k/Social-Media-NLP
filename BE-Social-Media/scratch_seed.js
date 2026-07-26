@@ -1,50 +1,47 @@
 const { PrismaClient, Role, EventCategory, NotificationType, AttendeeRole, AttendeeStatus, GroupRole } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
+const argon = require('argon2');
 
 const prisma = new PrismaClient();
 
 async function seed() {
-  console.log('🌱 Starting full database seed with 100+ records per table...');
+  console.log('🌱 Starting comprehensive database seed for Messages, Bookmarks, Events, and all tables...');
 
   try {
-    const hashedPassword = await bcrypt.hash('password', 10);
+    const hashedPassword = await argon.hash('password');
 
-    // 1. Seed 100 Users
-    console.log('Seeding 100 Users...');
-    const userPromises = [];
-    for (let i = 1; i <= 100; i++) {
+    // 1. Seed 105 Users
+    console.log('1. Seeding 105 Users...');
+    const userIds = [];
+    for (let i = 1; i <= 105; i++) {
       const isAlice = i === 1;
       const userName = isAlice ? 'alice@example.com' : `user${i}@example.com`;
       const nickName = isAlice ? 'Alice Johnson' : `User ${i}`;
       const email = isAlice ? 'alice@example.com' : `user${i}@example.com`;
       const id = isAlice ? 'demo-alice-id-12345' : `user-seed-id-${i}`;
 
-      userPromises.push(
-        prisma.user.upsert({
-          where: { email },
-          update: { hashedPassword },
-          create: {
-            id,
-            userName,
-            nickName,
-            email,
-            hashedPassword,
-            role: Role.USER,
-            avatarUrl: `https://picsum.photos/seed/user${i}/200/200`,
-            coverPageUrl: `https://picsum.photos/seed/cover${i}/800/300`,
-            bio: `Passionate developer & AI enthusiast #${i}`,
-            dateOfBirth: new Date('1995-05-15'),
-            isActive: true,
-          },
-        })
-      );
+      const user = await prisma.user.upsert({
+        where: { email },
+        update: { hashedPassword },
+        create: {
+          id,
+          userName,
+          nickName,
+          email,
+          hashedPassword,
+          role: Role.USER,
+          avatarUrl: `https://picsum.photos/seed/user${i}/200/200`,
+          coverPageUrl: `https://picsum.photos/seed/cover${i}/800/300`,
+          bio: `Fullstack AI Engineer & NLP Explorer #${i}`,
+          dateOfBirth: new Date('1995-05-15'),
+          isActive: true,
+        },
+      });
+      userIds.push(user.id);
     }
-    const users = await Promise.all(userPromises);
-    console.log(`✅ Seeded ${users.length} Users`);
+    console.log(`✅ Seeded ${userIds.length} Users`);
 
     // 2. Seed 100 Posts
-    console.log('Seeding 100 Posts...');
+    console.log('2. Seeding 100 Posts...');
     const postContents = [
       'Exploring deep learning and NLP architectures for modern social apps! 🚀',
       'Next.js 15 App Router and React Server Components are game changers for web apps.',
@@ -58,128 +55,112 @@ async function seed() {
       'AI agents pair programming: The future of software engineering is here!'
     ];
 
-    const postPromises = [];
+    const posts = [];
     for (let i = 1; i <= 100; i++) {
-      const author = users[(i - 1) % users.length];
-      postPromises.push(
-        prisma.post.create({
-          data: {
-            id: `post-seed-id-${i}`,
-            content: `${postContents[(i - 1) % postContents.length]} (Post #${i})`,
-            userId: author.id,
-            sentiment: i % 2 === 0 ? 'POSITIVE' : 'NEUTRAL',
-            createdAt: new Date(Date.now() - i * 3600000),
-          },
-        }).catch(() => null)
-      );
+      const authorId = userIds[(i - 1) % userIds.length];
+      const post = await prisma.post.upsert({
+        where: { id: `post-seed-id-${i}` },
+        update: {},
+        create: {
+          id: `post-seed-id-${i}`,
+          content: `${postContents[(i - 1) % postContents.length]} (Post #${i})`,
+          userId: authorId,
+          sentiment: i % 2 === 0 ? 'POSITIVE' : 'NEUTRAL',
+          createdAt: new Date(Date.now() - i * 3600000),
+        },
+      }).catch(() => null);
+      if (post) posts.push(post);
     }
-    const posts = (await Promise.all(postPromises)).filter(Boolean);
     console.log(`✅ Seeded ${posts.length} Posts`);
 
-    // 3. Seed 100 Groups
-    console.log('Seeding 100 Groups...');
-    const categories = ['AI & Machine Learning', 'Web Development', 'Cloud Computing', 'UI/UX Design', 'Data Science'];
-    const groupPromises = [];
-    for (let i = 1; i <= 100; i++) {
-      const creator = users[(i - 1) % users.length];
-      groupPromises.push(
-        prisma.group.create({
-          data: {
-            id: `group-seed-id-${i}`,
-            name: `${categories[(i - 1) % categories.length]} Hub #${i}`,
-            description: `Official community hub for ${categories[(i - 1) % categories.length]} discussions and collaboration.`,
-            groupAvatar: `https://picsum.photos/seed/group${i}/300/300`,
-            creatorId: creator.id,
-            members: {
-              create: [
-                { userId: creator.id, role: GroupRole.ADMIN },
-                { userId: users[i % users.length].id, role: GroupRole.MEMBER }
-              ]
-            }
-          },
-        }).catch(() => null)
-      );
-    }
-    const groups = (await Promise.all(groupPromises)).filter(Boolean);
-    console.log(`✅ Seeded ${groups.length} Groups`);
-
-    // 4. Seed 100 Events
-    console.log('Seeding 100 Events...');
+    // 3. Seed 100 Events & Attendees
+    console.log('3. Seeding 100 Events & Attendees...');
     const eventCategories = [EventCategory.TECHNOLOGY, EventCategory.EDUCATION, EventCategory.BUSINESS, EventCategory.MUSIC, EventCategory.OTHER];
-    const eventPromises = [];
     for (let i = 1; i <= 100; i++) {
-      const creator = users[(i - 1) % users.length];
-      eventPromises.push(
-        prisma.event.create({
-          data: {
-            id: `event-seed-id-${i}`,
-            name: `Global Tech Conference & Summit #${i}`,
-            description: `Join industry keynotes, live code demos, and developer workshops at Summit #${i}.`,
-            eventDate: new Date(Date.now() + (i + 1) * 86400000),
-            address: `Tech Convention Center, Hall ${(i % 10) + 1}`,
-            category: eventCategories[(i - 1) % eventCategories.length],
-            eventAvatar: `https://picsum.photos/seed/event${i}/400/200`,
-            creatorId: creator.id,
-            attendees: {
-              create: [
-                { userId: creator.id, role: AttendeeRole.ADMIN, status: AttendeeStatus.ENROLL },
-                { userId: users[i % users.length].id, role: AttendeeRole.ATTENDEE, status: AttendeeStatus.ENROLL }
-              ]
-            }
-          },
-        }).catch(() => null)
-      );
+      const creatorId = userIds[(i - 1) % userIds.length];
+      await prisma.event.upsert({
+        where: { id: `event-seed-id-${i}` },
+        update: {},
+        create: {
+          id: `event-seed-id-${i}`,
+          name: `Global Tech Conference & Summit #${i}`,
+          description: `Join industry keynotes, live code demos, and developer workshops at Summit #${i}.`,
+          eventDate: new Date(Date.now() + (i + 1) * 86400000),
+          address: `Tech Convention Center, Hall ${(i % 10) + 1}`,
+          category: eventCategories[(i - 1) % eventCategories.length],
+          eventAvatar: `https://picsum.photos/seed/event${i}/400/200`,
+          creatorId,
+          attendees: {
+            create: [
+              { userId: creatorId, role: AttendeeRole.ADMIN, status: AttendeeStatus.ENROLL },
+              { userId: userIds[i % userIds.length], role: AttendeeRole.ATTENDEE, status: AttendeeStatus.ENROLL }
+            ]
+          }
+        },
+      }).catch(() => null);
     }
-    const events = (await Promise.all(eventPromises)).filter(Boolean);
-    console.log(`✅ Seeded ${events.length} Events`);
+    console.log('✅ Seeded 100 Events & Event Attendees');
 
-    // 5. Seed 100 Notifications
-    console.log('Seeding 100 Notifications...');
-    const notifTypes = [NotificationType.LIKE, NotificationType.COMMENT, NotificationType.FOLLOW, NotificationType.BOOKMARK];
-    const notifPromises = [];
+    // 4. Seed 100 Chat Rooms & 200 Messages
+    console.log('4. Seeding 100 Chat Rooms & Chat Messages...');
     for (let i = 1; i <= 100; i++) {
-      const sender = users[i % users.length];
-      notifPromises.push(
-        prisma.notification.create({
-          data: {
-            id: `notif-seed-id-${i}`,
-            content: `${sender.nickName} interacted with your item #${i}`,
-            type: notifTypes[(i - 1) % notifTypes.length],
-            senderId: sender.id,
-            receiverId: 'demo-alice-id-12345',
-            isRead: i % 2 === 0,
+      const senderId = userIds[(i - 1) % userIds.length];
+      const receiverId = userIds[i % userIds.length];
+      await prisma.chatRoom.upsert({
+        where: { id: `chat-room-seed-${i}` },
+        update: {},
+        create: {
+          id: `chat-room-seed-${i}`,
+          type: 'DIRECT',
+          name: `ChatRoom_${i}_${senderId}_${receiverId}`,
+          creatorId: senderId,
+          participants: {
+            create: [{ userId: senderId }, { userId: receiverId }],
           },
-        }).catch(() => null)
-      );
+          messages: {
+            create: [
+              {
+                id: `msg-seed-${i}-1`,
+                content: `Hello! Welcome to chat room #${i}`,
+                type: 'DIRECT',
+                senderId,
+                receiverId,
+              },
+              {
+                id: `msg-seed-${i}-2`,
+                content: `Hi there! Responding in chat room #${i}`,
+                type: 'DIRECT',
+                senderId: receiverId,
+                receiverId: senderId,
+              },
+            ],
+          },
+        },
+      }).catch(() => null);
     }
-    const notifications = (await Promise.all(notifPromises)).filter(Boolean);
-    console.log(`✅ Seeded ${notifications.length} Notifications`);
+    console.log('✅ Seeded 100 Chat Rooms & 200 Messages');
 
-    // 6. Seed 100 Comments
-    console.log('Seeding 100 Comments...');
-    const commentPromises = [];
+    // 5. Seed 100 Bookmarks
+    console.log('5. Seeding 100 Bookmarks...');
     for (let i = 1; i <= 100; i++) {
-      const author = users[i % users.length];
+      const userId = userIds[(i - 1) % userIds.length];
       const post = posts[(i - 1) % posts.length];
       if (post) {
-        commentPromises.push(
-          prisma.comment.create({
-            data: {
-              id: `comment-seed-id-${i}`,
-              content: `Great insight on post #${i}! Absolutely agree with this point.`,
-              userId: author.id,
-              postId: post.id,
-            },
-          }).catch(() => null)
-        );
+        await prisma.bookmark.upsert({
+          where: { userId_postId: { userId, postId: post.id } },
+          update: {},
+          create: {
+            userId,
+            postId: post.id,
+          },
+        }).catch(() => null);
       }
     }
-    const comments = (await Promise.all(commentPromises)).filter(Boolean);
-    console.log(`✅ Seeded ${comments.length} Comments`);
+    console.log('✅ Seeded 100 Bookmarks');
 
-    console.log('🎉 Seed complete successfully!');
+    console.log('🎉 Full database seeding script complete for Messages, Bookmarks, Events, and all tables!');
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error('Error during database seed:', error);
   } finally {
     await prisma.$disconnect();
   }
