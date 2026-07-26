@@ -106,19 +106,18 @@ export class PostsService {
         }),
       ]);
 
-      if (posts && posts.length > 0) {
-        return {
-          data: posts,
-          meta: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-          },
-        };
-      }
-    } catch {
-      // Fallback on DB connection error
+      // Always return real DB result (even if empty array)
+      return {
+        data: posts,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch (err) {
+      console.error('[PostsService.findAll] DB error, falling back to mock:', err?.message);
     }
 
     const start = (page - 1) * limit;

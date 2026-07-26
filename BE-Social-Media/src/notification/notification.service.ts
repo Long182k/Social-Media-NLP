@@ -48,9 +48,9 @@ export class NotificationService {
         },
       });
 
-      if (notifs && notifs.length > 0) return notifs;
-    } catch {
-      // Fallback
+      return notifs;
+    } catch (err) {
+      console.error('[NotificationService.findAll] DB error, using mock:', err?.message);
     }
 
     return MOCK_NOTIFICATIONS;

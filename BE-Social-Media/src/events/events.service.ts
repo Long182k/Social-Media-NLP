@@ -82,32 +82,31 @@ export class EventsService {
         this.prisma.event.count(),
       ]);
 
-      if (events && events.length > 0) {
-        return {
-          events: events.map((event) => ({
-            id: event.id,
-            name: event.name,
-            description: event.description,
-            eventAvatar: event.eventAvatar,
-            eventDate: event.eventDate,
-            category: event.category,
-            address: event.address,
-            createdAt: event.createdAt,
-            creator: event.creator,
-            attendees: event.attendees,
-            attendeesCount: event._count.attendees,
-            activeAttendeesCount: event.attendees.length,
-          })),
-          meta: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-          },
-        };
-      }
-    } catch {
-      // Fallback
+      // Always return real DB result
+      return {
+        events: events.map((event) => ({
+          id: event.id,
+          name: event.name,
+          description: event.description,
+          eventAvatar: event.eventAvatar,
+          eventDate: event.eventDate,
+          category: event.category,
+          address: event.address,
+          createdAt: event.createdAt,
+          creator: event.creator,
+          attendees: event.attendees,
+          attendeesCount: event._count.attendees,
+          activeAttendeesCount: event.attendees.length,
+        })),
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch (err) {
+      console.error('[EventsService.findAll] DB error, using mock:', err?.message);
     }
 
     const start = (page - 1) * limit;

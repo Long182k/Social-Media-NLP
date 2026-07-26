@@ -112,9 +112,9 @@ export class GroupService {
         },
       });
 
-      if (groups && groups.length > 0) return groups;
-    } catch {
-      // Fallback
+      return groups;
+    } catch (err) {
+      console.error('[GroupService.findAll] DB error, using mock:', err?.message);
     }
 
     return MOCK_GROUPS.map((g) => ({
