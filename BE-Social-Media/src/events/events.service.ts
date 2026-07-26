@@ -572,10 +572,12 @@ export class EventsService {
           totalPages: Math.ceil(total / l),
         },
       };
-    } catch {
+    } catch (err: any) {
+      const errMsg = err?.stack || err?.message || String(err);
+      console.error('[EventsService.findDiscoveryEvents] DB error:', errMsg);
       return {
         events: [],
-        meta: { total: 0, page: 1, limit: 10, totalPages: 0 },
+        meta: { total: 0, page: 1, limit: 10, totalPages: 0, dbError: errMsg },
       };
     }
   }

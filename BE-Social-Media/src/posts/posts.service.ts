@@ -118,8 +118,8 @@ export class PostsService {
           totalPages: Math.ceil(total / limit),
         },
       };
-    } catch (err) {
-      lastError = err?.message || String(err);
+    } catch (err: any) {
+      lastError = err?.stack || err?.message || String(err);
       console.error('[PostsService.findAll] DB error, falling back to mock:', lastError);
     }
 
