@@ -15,22 +15,28 @@ const baseForWs = overrideWsUrl || serverUrl;
 const wsBase = baseForWs.replace(/^http(s?):\/\//, "ws$1://");
 const wsUrl = `${wsBase}/graphql`;
 
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: wsUrl,
-    connectionParams: () => {
-      const activeToken = getActiveAccessToken();
-      return {
-        Authorization: activeToken ? `Bearer ${activeToken}` : "",
-      };
-    },
-    on: {
-      connected: () => console.log("✅ GraphQL WebSocket connected"),
-      closed: (event) => console.log("❌ GraphQL WebSocket closed:", event),
-      error: (err) => console.error("⚠️ GraphQL WebSocket error:", err),
-    },
-  })
-);
+const isProductionServerless =
+  serverUrl.includes("vercel.app") || serverUrl.includes("render.com");
+
+const wsLink = isProductionServerless
+  ? null
+  : new GraphQLWsLink(
+      createClient({
+        url: wsUrl,
+        retryAttempts: 2,
+        connectionParams: () => {
+          const activeToken = getActiveAccessToken();
+          return {
+            Authorization: activeToken ? `Bearer ${activeToken}` : "",
+          };
+        },
+        on: {
+          connected: () => console.log("✅ GraphQL WebSocket connected"),
+          closed: () => {},
+          error: () => {},
+        },
+      })
+    );
 
 const httpLink = new HttpLink({
   uri: (import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app") + "/graphql",
@@ -46,16 +52,18 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const splitLink = split(
-  ({ query }) => {
-    const def = getMainDefinition(query);
-    return (
-      def.kind === "OperationDefinition" && def.operation === "subscription"
-    );
-  },
-  wsLink,
-  authLink.concat(httpLink)
-);
+const splitLink = wsLink
+  ? split(
+      ({ query }) => {
+        const def = getMainDefinition(query);
+        return (
+          def.kind === "OperationDefinition" && def.operation === "subscription"
+        );
+      },
+      wsLink,
+      authLink.concat(httpLink)
+    )
+  : authLink.concat(httpLink);
 
 export const apolloClient = new ApolloClient({
   link: splitLink,

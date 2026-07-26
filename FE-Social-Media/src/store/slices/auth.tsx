@@ -137,6 +137,11 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
       existingSocket.disconnect();
     }
 
+    if (SOCKET_URL.includes("vercel.app") || SOCKET_URL.includes("render.com")) {
+      set({ isSocketConnected: false });
+      return;
+    }
+
     console.log("Creating new socket connection...");
 
     const socket = io(SOCKET_URL, {

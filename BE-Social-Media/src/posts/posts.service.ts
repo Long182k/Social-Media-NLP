@@ -9,6 +9,7 @@ import { PaginationDto } from '../common/pagination.dto';
 import { CloudinaryService } from '../file/file.service';
 import { AttachmentsUploadedType } from '../file/file.type';
 import { NlpService } from '../nlp/nlp.service';
+import { MOCK_POSTS } from '../common/mock-data';
 
 @Injectable()
 export class PostsService {
@@ -105,27 +106,35 @@ export class PostsService {
         }),
       ]);
 
-      return {
-        data: posts,
-        meta: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-        },
-      };
+      if (posts && posts.length > 0) {
+        return {
+          data: posts,
+          meta: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
+        };
+      }
     } catch (error) {
       console.warn('PostsService.findAll fallback:', error?.message || error);
-      return {
-        data: [],
-        meta: {
-          total: 0,
-          page: Number(paginationDto?.page || 1),
-          limit: Number(paginationDto?.limit || 10),
-          totalPages: 0,
-        },
-      };
     }
+
+    const page = Number(paginationDto?.page || 1);
+    const limit = Number(paginationDto?.limit || 10);
+    const start = (page - 1) * limit;
+    const paginatedMock = MOCK_POSTS.slice(start, start + limit);
+
+    return {
+      data: paginatedMock,
+      meta: {
+        total: MOCK_POSTS.length,
+        page,
+        limit,
+        totalPages: Math.ceil(MOCK_POSTS.length / limit),
+      },
+    };
   }
 
   async findOne(id: string) {

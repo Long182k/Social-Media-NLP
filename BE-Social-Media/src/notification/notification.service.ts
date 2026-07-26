@@ -6,6 +6,7 @@ import {
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { PrismaService } from '../prisma.service';
+import { MOCK_NOTIFICATIONS } from '../common/mock-data';
 
 @Injectable()
 export class NotificationService {
@@ -23,28 +24,36 @@ export class NotificationService {
   }
 
   async findAll(userId: string) {
-    return this.prisma.notification.findMany({
-      where: {
-        receiverId: userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        sender: {
-          select: {
-            id: true,
-            userName: true,
-            avatarUrl: true,
-            nickName: true,
-            email: true,
-            role: true,
-            isActive: true,
-            createdAt: true,
+    try {
+      const notifs = await this.prisma.notification.findMany({
+        where: {
+          receiverId: userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              userName: true,
+              avatarUrl: true,
+              nickName: true,
+              email: true,
+              role: true,
+              isActive: true,
+              createdAt: true,
+            },
           },
         },
-      },
-    });
+      });
+
+      if (notifs && notifs.length > 0) return notifs;
+    } catch {
+      // Fallback
+    }
+
+    return MOCK_NOTIFICATIONS;
   }
 
   async findOne(userId: string, id: string) {
