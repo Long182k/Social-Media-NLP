@@ -51,6 +51,45 @@ export class EventsController {
     return this.eventsService.findAll(+page, +limit);
   }
 
+  @Get('trending/top')
+  getTrendingEvents() {
+    return this.eventsService.getTrendingEvents();
+  }
+
+  @Get('category/:category')
+  getEventsByCategory(
+    @Param('category', new ParseEnumPipe(EventCategory))
+    category: EventCategory,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @CurrentUser('userId') userId: string,
+  ) {
+    return this.eventsService.getEventsByCategory(
+      category,
+      +page,
+      +limit,
+      userId,
+    );
+  }
+
+  @Get('/all/discover')
+  findDiscoveryEvents(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @CurrentUser('userId') userId: string,
+  ) {
+    return this.eventsService.findDiscoveryEvents(userId, +page, +limit);
+  }
+
+  @Get('/all/my-events')
+  findMyEvents(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @CurrentUser('userId') userId: string,
+  ) {
+    return this.eventsService.findMyEvents(userId, +page, +limit);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(id);
@@ -101,44 +140,5 @@ export class EventsController {
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUser('userId') userId: string) {
     return this.eventsService.remove(id, userId);
-  }
-
-  @Get('trending/top')
-  getTrendingEvents() {
-    return this.eventsService.getTrendingEvents();
-  }
-
-  @Get('category/:category')
-  getEventsByCategory(
-    @Param('category', new ParseEnumPipe(EventCategory))
-    category: EventCategory,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-    @CurrentUser('userId') userId: string,
-  ) {
-    return this.eventsService.getEventsByCategory(
-      category,
-      +page,
-      +limit,
-      userId,
-    );
-  }
-
-  @Get('/all/discover')
-  findDiscoveryEvents(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-    @CurrentUser('userId') userId: string,
-  ) {
-    return this.eventsService.findDiscoveryEvents(userId, +page, +limit);
-  }
-
-  @Get('/all/my-events')
-  findMyEvents(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-    @CurrentUser('userId') userId: string,
-  ) {
-    return this.eventsService.findMyEvents(userId, +page, +limit);
   }
 }
