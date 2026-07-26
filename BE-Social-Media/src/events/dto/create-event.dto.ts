@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsEnum,
 } from 'class-validator';
 import { EventCategory } from '@prisma/client';
 
@@ -20,7 +19,7 @@ export class CreateEventDto {
   @IsNotEmpty()
   eventDate: string;
 
-  @IsEnum(EventCategory)
+  @IsString()
   @IsOptional()
   category?: EventCategory;
 
