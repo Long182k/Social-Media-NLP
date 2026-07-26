@@ -39,15 +39,8 @@ export class PostsController {
   }
 
   @Get()
-  async findAll(@Query() paginationDto: PaginationDto) {
-    try {
-      return await this.postsService.findAll(paginationDto);
-    } catch {
-      return {
-        data: MOCK_POSTS.slice(0, 10),
-        meta: { total: MOCK_POSTS.length, page: 1, limit: 10, totalPages: 4 },
-      };
-    }
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.postsService.findAll(paginationDto);
   }
 
   @Get('single/:id')
