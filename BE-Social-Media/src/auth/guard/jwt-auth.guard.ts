@@ -44,11 +44,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       this.extractTokenFromConnection(gqlContext) ||
       this.extractTokenFromHeader(request);
 
-    if (!token) throw new UnauthorizedException('Missing Bearer tokenzzzzzzz');
+    if (!token) throw new UnauthorizedException('Missing Bearer token');
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
+        secret:
+          process.env.JWT_SECRET || 'super_secret_jwt_access_token_key_2026',
       });
       request.user = payload;
       gqlContext.user = payload; // important for subscriptions

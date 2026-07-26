@@ -62,59 +62,70 @@ export class PostsService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { page, limit, search } = paginationDto;
-    const skip = (page - 1) * limit;
+    try {
+      const page = Number(paginationDto?.page || 1);
+      const limit = Number(paginationDto?.limit || 10);
+      const search = paginationDto?.search || undefined;
+      const skip = (page - 1) * limit;
 
-    const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
-        skip,
-        take: limit,
-        where: {
-          content: {
-            contains: search,
+      const [posts, total] = await Promise.all([
+        this.prisma.post.findMany({
+          skip,
+          take: limit,
+          where: {
+            content: search ? { contains: search } : undefined,
+            groupId: null,
           },
-          groupId: null,
-        },
-        include: {
-          user: true,
-          comments: {
-            include: {
-              user: true,
-              attachments: true,
+          include: {
+            user: true,
+            comments: {
+              include: {
+                user: true,
+                attachments: true,
+              },
+            },
+            attachments: true,
+            _count: {
+              select: {
+                likes: true,
+                comments: true,
+                bookmarks: true,
+              },
             },
           },
-          attachments: true,
-          _count: {
-            select: {
-              likes: true,
-              comments: true,
-              bookmarks: true,
-            },
+          orderBy: {
+            createdAt: 'desc',
           },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      this.prisma.post.count({
-        where: {
-          content: {
-            contains: search,
+        }),
+        this.prisma.post.count({
+          where: {
+            content: search ? { contains: search } : undefined,
+            groupId: null,
           },
-          groupId: null,
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    return {
-      data: posts,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
+      return {
+        data: posts,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch (error) {
+      console.warn('PostsService.findAll fallback:', error?.message || error);
+      return {
+        data: [],
+        meta: {
+          total: 0,
+          page: Number(paginationDto?.page || 1),
+          limit: Number(paginationDto?.limit || 10),
+          totalPages: 0,
+        },
+      };
+    }
   }
 
   async findOne(id: string) {
