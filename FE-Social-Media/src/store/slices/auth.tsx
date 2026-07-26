@@ -146,7 +146,7 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
       },
       autoConnect: true,
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 2,
       reconnectionDelay: 1000,
     });
 
@@ -158,8 +158,9 @@ const createAuthState: StateCreator<AuthStore> = (set, get) => ({
     });
 
     socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
+      console.warn("Socket connection warning (realtime websocket fallback):", error.message);
       set({ isSocketConnected: false });
+      socket.disconnect();
     });
 
     socket.on("disconnect", (reason) => {
