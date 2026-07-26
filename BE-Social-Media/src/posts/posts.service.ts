@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreatePostDto, UpdatePostDto } from './dto/post.dto';
@@ -68,52 +69,57 @@ export class PostsService {
     const search = paginationDto?.search || undefined;
     const skip = (page - 1) * limit;
 
-    const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
-        skip,
-        take: limit,
-        where: {
-          content: search ? { contains: search } : undefined,
-          groupId: null,
-        },
-        include: {
-          user: true,
-          comments: {
-            include: {
-              user: true,
-              attachments: true,
+    try {
+      const [posts, total] = await Promise.all([
+        this.prisma.post.findMany({
+          skip,
+          take: limit,
+          where: {
+            content: search ? { contains: search } : undefined,
+            groupId: null,
+          },
+          include: {
+            user: true,
+            comments: {
+              include: {
+                user: true,
+                attachments: true,
+              },
+            },
+            attachments: true,
+            _count: {
+              select: {
+                likes: true,
+                comments: true,
+                bookmarks: true,
+              },
             },
           },
-          attachments: true,
-          _count: {
-            select: {
-              likes: true,
-              comments: true,
-              bookmarks: true,
-            },
+          orderBy: {
+            createdAt: 'desc',
           },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      this.prisma.post.count({
-        where: {
-          content: search ? { contains: search } : undefined,
-          groupId: null,
-        },
-      }),
-    ]);
+        }),
+        this.prisma.post.count({
+          where: {
+            content: search ? { contains: search } : undefined,
+            groupId: null,
+          },
+        }),
+      ]);
 
-    return {
-      data: posts,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
+      return {
+        data: posts,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch (err: any) {
+      console.error('[PostsService.findAll] Error:', err);
+      throw new InternalServerErrorException(err?.message || String(err));
+    }
   }
 
   async findOne(id: string) {

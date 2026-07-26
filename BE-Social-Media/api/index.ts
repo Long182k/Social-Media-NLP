@@ -72,7 +72,7 @@ export default async function handler(req: any, res: any) {
       statusCode: 500,
       error: 'Internal Server Error',
       message: error?.message || 'Failed to initialize NestJS application',
-      stack: process.env.NODE_ENV === 'development' ? error?.stack : undefined,
+      stack: error?.stack,
     });
   }
 }
