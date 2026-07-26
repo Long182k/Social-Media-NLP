@@ -11,7 +11,7 @@ import { Public } from '../auth/decorator/public.decorator';
 
 @Public()
 @WebSocketGateway({
-  transports: ['websocket'],
+  transports: ['polling', 'websocket'],
   cors: {
     origin: '*',
     credentials: true,

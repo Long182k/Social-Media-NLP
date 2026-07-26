@@ -26,15 +26,6 @@ let pendingQueue: Array<(t: string) => void> = [];
 
 export const setAccessToken = (token: string | undefined) => {
   accessToken = token;
-
-  try {
-    const { updateUserInfo } = getStoreActions();
-    if (token) {
-      updateUserInfo({ accessToken: token });
-    }
-  } catch (error) {
-    console.warn("Store not yet initialized:", error);
-  }
 };
 
 export const getActiveAccessToken = (): string | undefined => {
