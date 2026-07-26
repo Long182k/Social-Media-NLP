@@ -1,7 +1,6 @@
-// Force regenerate PostgreSQL schema for Neon DB v2
+// Force regenerate PostgreSQL schema for Neon DB v3
 generator client {
   provider      = "prisma-client-js"
-  output        = "../node_modules/.prisma/client"
   binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
 }
 
