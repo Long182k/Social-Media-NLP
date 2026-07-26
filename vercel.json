@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "FE-Social-Media/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "BE-Social-Media/api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file)(.*)",
+      "dest": "BE-Social-Media/api/index.ts"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "BE-Social-Media/api/index.ts"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "FE-Social-Media/index.html"
+    }
+  ]
+}

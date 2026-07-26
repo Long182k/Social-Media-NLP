@@ -7,7 +7,8 @@ import { getActiveAccessToken } from "./axiosConfig";
 
 // Build WebSocket URL automatically from server URL (http -> ws, https -> wss)
 const serverUrl =
-  import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app";
+  import.meta.env.VITE_SERVER_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "https://social-media-nlp-be.vercel.app");
 const overrideWsUrl = import.meta.env.VITE_WS_URL;
 const baseForWs = overrideWsUrl || serverUrl;
 
@@ -39,7 +40,7 @@ const wsLink = isProductionServerless
     );
 
 const httpLink = new HttpLink({
-  uri: (import.meta.env.VITE_SERVER_URL || "https://social-media-nlp-be.vercel.app") + "/graphql",
+  uri: `${serverUrl}/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
