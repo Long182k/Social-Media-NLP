@@ -5,8 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
 }
 
 model User {
@@ -46,7 +46,7 @@ model User {
 model Group {
   id          String        @id @default(uuid())
   name        String
-  description String?       @db.Text
+  description String?
   groupAvatar String?
   creatorId   String
   createdAt   DateTime      @default(now())
@@ -82,13 +82,13 @@ model Follow {
   following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
-  @@index([followingId], map: "follows_followingId_fkey")
+  @@index([followingId])
   @@map("follows")
 }
 
 model Post {
   id          String       @id @default(uuid())
-  content     String       @db.Text
+  content     String
   userId      String
   groupId     String?
   sentiment   String       @default("MODERATE")
@@ -100,7 +100,7 @@ model Post {
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   group       Group?       @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  @@index([userId], map: "posts_userId_fkey")
+  @@index([userId])
   @@index([groupId])
   @@map("posts")
 }
@@ -117,15 +117,15 @@ model Attachment {
   ChatMessage   ChatMessage? @relation(fields: [chatMessageId], references: [id])
   chatMessageId String?
 
-  @@index([postId], map: "post_media_postId_fkey")
-  @@index([commentId], map: "post_media_commentId_fkey")
-  @@index([chatMessageId], map: "chat_message_media_messageId_fkey")
+  @@index([postId])
+  @@index([commentId])
+  @@index([chatMessageId])
   @@map("attachments")
 }
 
 model Comment {
   id          String       @id @default(uuid())
-  content     String       @db.Text
+  content     String
   userId      String
   postId      String
   sentiment   String       @default("MODERATE")
@@ -134,8 +134,8 @@ model Comment {
   post        Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([postId], map: "comments_postId_fkey")
-  @@index([userId], map: "comments_userId_fkey")
+  @@index([postId])
+  @@index([userId])
   @@map("comments")
 }
 
@@ -148,7 +148,7 @@ model Like {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
-  @@index([postId], map: "likes_postId_fkey")
+  @@index([postId])
   @@map("likes")
 }
 
@@ -161,7 +161,7 @@ model Bookmark {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
-  @@index([postId], map: "bookmarks_postId_fkey")
+  @@index([postId])
   @@map("bookmarks")
 }
 
@@ -211,7 +211,7 @@ model ChatParticipant {
 
 model ChatMessage {
   id          String       @id @default(uuid())
-  content     String       @db.Text
+  content     String
   type        String       @default("MESSAGE")
   senderId    String
   receiverId  String
@@ -229,12 +229,12 @@ model ChatMessage {
 model Event {
   id          String          @id @default(uuid())
   name        String
-  description String          @db.Text
+  description String
   eventAvatar String?
   eventDate   DateTime
   creatorId   String
   category    EventCategory   @default(OTHER)
-  address     String?         @db.Text
+  address     String?
   createdAt   DateTime        @default(now())
   creator     User            @relation("CreatedEvents", fields: [creatorId], references: [id], onDelete: Cascade)
   attendees   EventAttendee[]
@@ -273,8 +273,8 @@ enum NotificationType {
 }
 
 enum MediaType {
-  image
-  video
+  IMAGE
+  VIDEO
 }
 
 enum Role {
@@ -288,8 +288,8 @@ enum ChatRoomType {
 }
 
 enum ChatAttachmentType {
-  image
-  video
+  IMAGE
+  VIDEO
 }
 
 enum GroupRole {
