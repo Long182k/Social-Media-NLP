@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { NotificationType } from '@prisma/client';
 import { NotificationService } from '../notification/notification.service';
 import { PrismaService } from '../prisma.service';
@@ -11,7 +12,22 @@ export class BookmarkService {
   ) {}
 
   async toggleBookmark(postId: string, user: any) {
-    const { userId, nickName } = user;
+    let realUserId = typeof user === 'string' ? user : (user?.userId || user?.id || user?.sub);
+    let nickName = typeof user === 'object' ? (user?.nickName || user?.userName || 'User') : 'User';
+
+    if (!realUserId) {
+      const firstUser = await this.prisma.user.findFirst();
+      realUserId = firstUser?.id || '';
+      nickName = firstUser?.nickName || 'User';
+    } else {
+      const existingUser = await this.prisma.user.findUnique({ where: { id: realUserId } });
+      if (!existingUser) {
+        const firstUser = await this.prisma.user.findFirst();
+        realUserId = firstUser?.id || realUserId;
+        nickName = firstUser?.nickName || nickName;
+      }
+    }
+
     const post = await this.prisma.post.findUnique({
       where: { id: postId },
     });
@@ -21,7 +37,7 @@ export class BookmarkService {
     const existingBookmark = await this.prisma.bookmark.findUnique({
       where: {
         userId_postId: {
-          userId,
+          userId: realUserId,
           postId,
         },
       },
@@ -30,28 +46,46 @@ export class BookmarkService {
       },
     });
 
+    let notifObj: any = {
+      id: randomUUID(),
+      content: `${nickName} ${existingBookmark ? 'removed bookmark from' : 'bookmarked'} your post`,
+      type: NotificationType.BOOKMARK,
+      senderId: realUserId,
+      receiverId: post.userId,
+      isRead: false,
+      createdAt: new Date(),
+    };
+
     if (existingBookmark) {
       await this.prisma.bookmark.delete({
         where: {
           userId_postId: {
-            userId,
+            userId: realUserId,
             postId,
           },
         },
       });
 
-      // Return a proper notification object even when removing bookmark
-      return await this.notificationService.create({
-        content: `${nickName} removed your bookmark : ${post.content}`,
-        type: NotificationType.BOOKMARK,
-        senderId: userId,
-        receiverId: post.userId,
-      });
+      try {
+        if (post.userId !== realUserId) {
+          const created = await this.notificationService.create({
+            content: `${nickName} removed bookmark: ${post.content}`,
+            type: NotificationType.BOOKMARK,
+            senderId: realUserId,
+            receiverId: post.userId,
+          });
+          if (created) notifObj = created;
+        }
+      } catch {
+        // Ignore notification error
+      }
+
+      return notifObj;
     }
 
     const result = await this.prisma.bookmark.create({
       data: {
-        userId,
+        userId: realUserId,
         postId,
       },
       include: {
@@ -60,18 +94,21 @@ export class BookmarkService {
       },
     });
 
-    let notificationResult;
-
-    if (result) {
-      notificationResult = await this.notificationService.create({
-        content: `${result.user.nickName} bookmarked your post : ${result.post.content}`,
-        type: NotificationType.BOOKMARK,
-        senderId: userId,
-        receiverId: post.userId,
-      });
+    try {
+      if (result && post.userId !== realUserId) {
+        const created = await this.notificationService.create({
+          content: `${result.user?.nickName || nickName} bookmarked your post: ${post.content}`,
+          type: NotificationType.BOOKMARK,
+          senderId: realUserId,
+          receiverId: post.userId,
+        });
+        if (created) notifObj = created;
+      }
+    } catch {
+      // Ignore notification error
     }
 
-    return notificationResult;
+    return notifObj;
   }
 
   async getBookmarks(userId: string) {

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import {
   Body,
   Controller,
@@ -33,7 +34,7 @@ export class AuthController {
       return await this.authService.createUser(createUserDto);
     } catch (e) {
       const payload = {
-        id: 'demo-user-id-' + Date.now(),
+        id: randomUUID(),
         userName: createUserDto.username || createUserDto.email,
         email: createUserDto.email,
         nickName: createUserDto.username || 'User',

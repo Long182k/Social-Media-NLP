@@ -26,4 +26,8 @@ export class CreateEventDto {
   @IsString()
   @IsOptional()
   address?: string;
+
+  @IsString()
+  @IsOptional()
+  eventAvatar?: string;
 }

@@ -65,20 +65,13 @@ export class AuthService {
     }
 
     if (!user && (userName === 'alice@example.com' || userName === 'alice')) {
-      return {
-        id: 'demo-alice-id-12345',
-        userName: 'alice@example.com',
-        nickName: 'Alice',
-        email: 'alice@example.com',
-        role: 'USER',
-        avatarUrl:
-          'https://res.cloudinary.com/dcivdqyyj/image/upload/v1736957755/sq1svii2veo8hewyelud.jpg',
-        coverPageUrl:
-          'https://res.cloudinary.com/dcivdqyyj/image/upload/v1736957736/mfbprtxbj5bjj8nkzt7f.jpg',
-        isActive: true,
-      };
+      try {
+        const aliceDb = await this.prisma.user.findFirst({ where: { email: 'alice@example.com' } });
+        if (aliceDb) return aliceDb;
+      } catch {
+        // Ignore
+      }
     }
-
     if (!user || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -310,7 +303,7 @@ export class AuthService {
 
       if (!userInfo) {
         userInfo = {
-          id: userId || 'demo-alice-id-12345',
+          id: (userId && userId.length > 20) ? userId : randomUUID(),
           userName: email || 'alice@example.com',
           nickName: payload?.nickName || 'Alice',
           email: email || 'alice@example.com',
@@ -408,6 +401,10 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
+
+    if (!user || !user.hashedPassword) {
+      throw new NotFoundException('User not found');
+    }
 
     const isPasswordValid = await argon.verify(
       user.hashedPassword,

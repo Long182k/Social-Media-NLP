@@ -12,9 +12,9 @@ export const CurrentUser = createParamDecorator(
 
     if (data) {
       if (data === 'userId') {
-        return user?.userId || user?.id || user?.sub || 'demo-alice-id-12345';
+        return user?.userId || user?.id || user?.sub || null;
       }
-      return user?.[data] ?? user?.userId ?? user?.id ?? user?.sub;
+      return user?.[data] ?? user?.userId ?? user?.id ?? user?.sub ?? null;
     }
     return user;
   },
