@@ -176,17 +176,17 @@ const PostItem = ({
         >
           <Space>
             <Avatar
-              src={post.user.avatarUrl}
+              src={post?.user?.avatarUrl}
               size={50}
               style={{ cursor: "pointer" }}
-              onClick={() => handleNavigateToProfile(post.userId)}
+              onClick={() => handleNavigateToProfile(post?.userId)}
             />
             <div>
               <Typography.Text
                 strong
                 style={{ color: isDarkMode ? "#e4e6eb" : "inherit" }}
               >
-                {post.user.userName}
+                {post?.user?.userName || "User"}
               </Typography.Text>
               <div className="post-header-right">
                 <Typography.Text
@@ -196,14 +196,16 @@ const PostItem = ({
                     marginLeft: "8px",
                   }}
                 >
-                  {formatTimeAgo(new Date(post.createdAt))}
+                  {post?.createdAt ? formatTimeAgo(new Date(post.createdAt)) : ""}
                 </Typography.Text>
-                <Tooltip title={getSentimentMessage(post.sentiment)}>
-                  <div
-                    className={`sentiment-indicator sentiment-${post.sentiment.toLowerCase()}`}
-                    aria-label={`Sentiment: ${post.sentiment}`}
-                  />
-                </Tooltip>
+                {post?.sentiment && (
+                  <Tooltip title={getSentimentMessage(post.sentiment)}>
+                    <div
+                      className={`sentiment-indicator sentiment-${post.sentiment.toLowerCase()}`}
+                      aria-label={`Sentiment: ${post.sentiment}`}
+                    />
+                  </Tooltip>
+                )}
               </div>
             </div>
           </Space>
@@ -321,7 +323,7 @@ const PostItem = ({
               loading={isLoadingPosts}
             >
               <span style={{ color: isLiked ? "#1677ff" : "#878686" }}>
-                {post._count.likes}
+                {post?._count?.likes ?? 0}
               </span>
               <span style={{ color: isLiked ? "#1677ff" : "#878686" }}>
                 {" "}
@@ -342,7 +344,7 @@ const PostItem = ({
               className={`action-button ${isDarkMode ? "dark" : ""}`}
               onClick={() => setCommentModalVisible(!commentModalVisible)}
             >
-              <span style={{ color: "#878686" }}>{post._count.comments}</span>
+              <span style={{ color: "#878686" }}>{post?._count?.comments ?? 0}</span>
               <span style={{ color: "#878686" }}> Comment </span>
             </Button>
             <Button
@@ -362,7 +364,7 @@ const PostItem = ({
               loading={isLoadingPosts}
             >
               <span style={{ color: isBookmarked ? "#1677ff" : "#878686" }}>
-                {post._count.bookmarks}
+                {post?._count?.bookmarks ?? 0}
               </span>
               <span style={{ color: isBookmarked ? "#1677ff" : "#878686" }}>
                 {" "}
