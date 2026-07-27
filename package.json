@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd FE-Social-Media && npm run build",
-    "vercel-build": "cd BE-Social-Media && npx prisma generate && cd ../FE-Social-Media && npm run build && node -e \"require('fs').cpSync('dist', '../dist', {recursive: true})\""
+    "build": "cd FE-Social-Media && npx vite build",
+    "vercel-build": "cd BE-Social-Media && npx prisma generate && cd ../FE-Social-Media && npx vite build && node -e \"require('fs').cpSync('dist', '../dist', {recursive: true})\""
   }
 }
