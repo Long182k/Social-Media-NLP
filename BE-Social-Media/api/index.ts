@@ -7,50 +7,51 @@ if (!process.env.REFRESH_JWT_SECRET) {
 }
 
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 
-let AppModule: any;
-try {
-  AppModule = require('../dist/src/app.module').AppModule;
-} catch {
-  AppModule = require('../src/app.module').AppModule;
-}
-
 const server = express();
 let isInitialized = false;
+let initError: any = null;
 
 async function initServer() {
   if (!isInitialized) {
-    const app = await NestFactory.create(
-      AppModule,
-      new ExpressAdapter(server),
-      { logger: ['error', 'warn', 'log'] },
-    );
+    try {
+      const app = await NestFactory.create(
+        AppModule,
+        new ExpressAdapter(server),
+        { logger: ['error', 'warn', 'log'] },
+      );
 
-    app.enableCors({
-      origin: true,
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      credentials: true,
-    });
+      app.enableCors({
+        origin: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        credentials: true,
+      });
 
-    server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
-    app.use(cookieParser());
+      server.use(express.json());
+      server.use(express.urlencoded({ extended: true }));
+      app.use(cookieParser());
 
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        transformOptions: {
-          enableImplicitConversion: true,
-        },
-      }),
-    );
+      app.useGlobalPipes(
+        new ValidationPipe({
+          transform: true,
+          transformOptions: {
+            enableImplicitConversion: true,
+          },
+        }),
+      );
 
-    await app.init();
-    isInitialized = true;
+      await app.init();
+      isInitialized = true;
+    } catch (err: any) {
+      console.error('Failed to initialize NestJS application:', err);
+      initError = err;
+      throw err;
+    }
   }
 }
 
@@ -66,6 +67,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    if (initError) {
+      return res.status(500).json({
+        statusCode: 500,
+        error: 'Initialization Failed',
+        message: initError?.message || String(initError),
+        stack: initError?.stack,
+      });
+    }
     await initServer();
     return new Promise((resolve, reject) => {
       res.on('finish', resolve);
@@ -73,11 +82,11 @@ export default async function handler(req: any, res: any) {
       server(req, res);
     });
   } catch (error: any) {
-    console.error('NestJS Initialization Error:', error);
+    console.error('NestJS Serverless Error:', error);
     return res.status(500).json({
       statusCode: 500,
       error: 'Internal Server Error',
-      message: error?.message || 'Failed to initialize NestJS application',
+      message: error?.message || String(error),
       stack: error?.stack,
     });
   }
