@@ -10,7 +10,13 @@
     },
     {
       "src": "BE-Social-Media/api/index.ts",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "BE-Social-Media/node_modules/.prisma/client/**",
+          "BE-Social-Media/node_modules/@prisma/client/**"
+        ]
+      }
     }
   ],
   "rewrites": [
