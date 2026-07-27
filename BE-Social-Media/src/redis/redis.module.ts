@@ -21,6 +21,7 @@ const redisProvider = {
         set: async () => 'OK',
         del: async () => 1,
         on: () => mockRedis,
+        status: 'ready',
       };
       return mockRedis;
     }
@@ -55,12 +56,23 @@ const redisProvider = {
 const redlockProvider = {
   provide: 'REDLOCK',
   inject: ['REDIS_CLIENT'],
-  useFactory: (redis: Redis) =>
-    new Redlock([redis], {
+  useFactory: (redis: any) => {
+    if (!redis || typeof redis.eval !== 'function') {
+      return {
+        acquire: async () => ({
+          release: async () => {},
+        }),
+        using: async (resources: any, ttl: number, routine: any) => {
+          return routine();
+        },
+      };
+    }
+    return new Redlock([redis], {
       retryCount: 5,
       retryDelay: 500,
       retryJitter: 100,
-    }),
+    });
+  },
 };
 
 @Module({
