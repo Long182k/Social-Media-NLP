@@ -77,18 +77,18 @@ function DetailPageComponent({
   });
 
   const filteredFollowing =
-    followingData?.data?.filter(
-      (user) =>
-        user.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.nickName?.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    (Array.isArray(followingData?.data) ? followingData.data : (Array.isArray(followingData) ? (followingData as any) : [])).filter(
+      (user: any) =>
+        user?.userName?.toLowerCase?.()?.includes(searchTerm.toLowerCase()) ||
+        user?.nickName?.toLowerCase?.()?.includes(searchTerm.toLowerCase())
+    );
 
   const filteredFollowers =
-    followersData?.data?.filter(
-      (user) =>
-        user.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.nickName?.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    (Array.isArray(followersData?.data) ? followersData.data : (Array.isArray(followersData) ? (followersData as any) : [])).filter(
+      (user: any) =>
+        user?.userName?.toLowerCase?.()?.includes(searchTerm.toLowerCase()) ||
+        user?.nickName?.toLowerCase?.()?.includes(searchTerm.toLowerCase())
+    );
 
   const renderPhotoCards = (ownImages: Attachment[]) => {
     {

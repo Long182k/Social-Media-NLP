@@ -46,7 +46,13 @@ function Notifications({ isDarkMode }: NotificationProps): JSX.Element {
       <List
         loading={isLoading}
         itemLayout="horizontal"
-        dataSource={notifications}
+        dataSource={
+          Array.isArray(notifications)
+            ? notifications
+            : (Array.isArray((notifications as any)?.data)
+                ? (notifications as any).data
+                : [])
+        }
         renderItem={(item) => (
           <List.Item
             key={item.id}

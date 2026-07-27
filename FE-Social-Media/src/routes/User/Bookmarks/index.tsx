@@ -73,7 +73,13 @@ function Bookmarks({
       children: (
         <List
           itemLayout="horizontal"
-          dataSource={bookmarks?.data}
+          dataSource={
+            Array.isArray(bookmarks?.data)
+              ? bookmarks.data
+              : (Array.isArray((bookmarks?.data as any)?.data)
+                  ? (bookmarks.data as any).data
+                  : (Array.isArray(bookmarks) ? (bookmarks as any) : []))
+          }
           renderItem={(item) => (
             <List.Item key={item.id} className="bookmark-list-item">
               <Button

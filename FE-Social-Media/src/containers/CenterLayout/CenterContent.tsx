@@ -108,7 +108,15 @@ const CenterContent = ({
       ) : (
         <List
           size="large"
-          dataSource={isFromProfile ? ownPosts : postsQuery?.data}
+          dataSource={
+            isFromProfile
+              ? (Array.isArray(ownPosts) ? ownPosts : [])
+              : (Array.isArray(postsQuery?.data)
+                  ? postsQuery.data
+                  : (Array.isArray((postsQuery?.data as any)?.data)
+                      ? (postsQuery.data as any).data
+                      : []))
+          }
           renderItem={(post: Post) => (
             <PostItem
               post={post}
