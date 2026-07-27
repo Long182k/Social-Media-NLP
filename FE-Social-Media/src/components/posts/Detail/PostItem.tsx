@@ -385,7 +385,7 @@ const PostItem = ({
             {/* Quick Comment Input */}
             <Space direction="vertical" style={{ width: "100%" }}>
               <Space style={{ width: "100%", marginBottom: 8 }}>
-                <Avatar src={userInfo.avatarUrl} alt={userInfo.userName} />
+                <Avatar src={userInfo?.avatarUrl} alt={userInfo?.userName || "User"} />
                 <div style={{ position: "relative", width: "100%" }}>
                   <Input.TextArea
                     placeholder={
