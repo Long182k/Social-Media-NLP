@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "build": "cd FE-Social-Media && npx vite build",
-    "vercel-build": "cd BE-Social-Media && npx prisma@5.22.0 generate && cd ../FE-Social-Media && npx vite build && node -e \"require('fs').cpSync('dist', '../dist', {recursive: true})\""
+    "vercel-build": "cd BE-Social-Media && npx prisma generate && cd ../FE-Social-Media && npx vite build && node -e \"require('fs').cpSync('dist', '../dist', {recursive: true})\""
+  },
+  "devDependencies": {
+    "prisma": "5.22.0"
   }
 }
