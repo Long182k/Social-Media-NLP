@@ -100,76 +100,86 @@ function GroupList({ isDarkMode }: GroupListProps) {
     });
   };
 
-  const renderGroups = (groups: Group[] = [], isJoined: boolean) => (
-    <Row gutter={[24, 24]}>
-      {groups.map((group) => (
-        <Col xs={24} sm={12} md={8} key={group.id}>
-          <Card
-            onClick={() => handleGroupClick(group)}
-            cover={
-              <div className="group-cover-image">
-                <img
-                  alt={group.name}
-                  src={
-                    group.groupAvatar || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80"
-                  }
-                  style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                />
-              </div>
-            }
-            className="group-card"
-            style={{
-              background: isDarkMode ? "#1f1f1f" : "#ffffff",
-              border: `1px solid ${isDarkMode ? "#303030" : "#f0f0f0"}`,
-              cursor: isJoined ? "pointer" : "default",
-            }}
-          >
-            <Title
-              level={4}
+  const renderGroups = (groupsData: any = [], isJoined: boolean) => {
+    const list = Array.isArray(groupsData)
+      ? groupsData
+      : Array.isArray(groupsData?.data)
+      ? groupsData.data
+      : Array.isArray(groupsData?.groups)
+      ? groupsData.groups
+      : [];
+
+    return (
+      <Row gutter={[24, 24]}>
+        {list.map((group: any) => (
+          <Col xs={24} sm={12} md={8} key={group.id}>
+            <Card
+              onClick={() => handleGroupClick(group)}
+              cover={
+                <div className="group-cover-image">
+                  <img
+                    alt={group.name}
+                    src={
+                      group.groupAvatar ||
+                      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80"
+                    }
+                    style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                  />
+                </div>
+              }
+              className="group-card"
               style={{
-                color: isDarkMode ? "#ffffff" : "#000000",
-                marginBottom: 8,
+                background: isDarkMode ? "#1f1f1f" : "#ffffff",
+                border: `1px solid ${isDarkMode ? "#303030" : "#f0f0f0"}`,
+                cursor: isJoined ? "pointer" : "default",
               }}
             >
-              {group.name}
-            </Title>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: 12,
-              }}
-            >
-              <img
-                src={
-                  group.creator.avatarUrl ||
-                  "https://res.cloudinary.com/dcivdqyyj/image/upload/v1736957755/sq1svii2veo8hewyelud.jpg"
-                }
-                alt={group.creator.userName}
+              <Title
+                level={4}
                 style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: "50%",
-                  marginRight: 8,
+                  color: isDarkMode ? "#ffffff" : "#000000",
+                  marginBottom: 8,
                 }}
-              />
+              >
+                {group.name}
+              </Title>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: 12,
+                }}
+              >
+                <img
+                  src={
+                    group.creator?.avatarUrl ||
+                    "https://res.cloudinary.com/dcivdqyyj/image/upload/v1736957755/sq1svii2veo8hewyelud.jpg"
+                  }
+                  alt={group.creator?.userName || "Creator"}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: "50%",
+                    marginRight: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: isDarkMode ? "#ffffff99" : "#00000099",
+                  }}
+                >
+                  Created by {group.creator?.userName || "Unknown"}
+                </Text>
+              </div>
               <Text
                 style={{
                   color: isDarkMode ? "#ffffff99" : "#00000099",
+                  display: "block",
+                  marginBottom: 16,
                 }}
               >
-                Created by {group.creator.userName}
+                {(group._count?.members || 0).toLocaleString()} members
               </Text>
-            </div>
-            <Text
-              style={{
-                color: isDarkMode ? "#ffffff99" : "#00000099",
-                display: "block",
-                marginBottom: 16,
-              }}
-            >
-              {group._count?.members.toLocaleString()} members
-            </Text>
             {!isJoined && (
               <Button
                 type="primary"
@@ -207,6 +217,7 @@ function GroupList({ isDarkMode }: GroupListProps) {
       ))}
     </Row>
   );
+};
 
   const items = [
     {

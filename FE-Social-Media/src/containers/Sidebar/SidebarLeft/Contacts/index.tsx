@@ -10,12 +10,21 @@ const { Title, Text } = Typography;
 function Groups({ isDarkMode }: GroupsProps): JSX.Element {
   const navigate = useNavigate();
 
-  const { data: myGroups } = useQuery({
+  const { data: myGroupsData } = useQuery({
     queryKey: ["groups", "joined"],
     queryFn: () => groupApi.getGroups(true),
   });
 
-  const getGroupInitials = (groupName: string): string => {
+  const groupList = Array.isArray(myGroupsData)
+    ? myGroupsData
+    : Array.isArray((myGroupsData as any)?.data)
+    ? (myGroupsData as any).data
+    : Array.isArray((myGroupsData as any)?.groups)
+    ? (myGroupsData as any).groups
+    : [];
+
+  const getGroupInitials = (groupName?: string): string => {
+    if (!groupName) return "GR";
     return groupName
       .split(" ")
       .map((name) => name.charAt(0).toUpperCase())
@@ -41,19 +50,19 @@ function Groups({ isDarkMode }: GroupsProps): JSX.Element {
 
       <List
         style={{ marginLeft: 12 }}
-        dataSource={myGroups || []}
+        dataSource={groupList}
         renderItem={(item: any) => (
           <List.Item>
             <List.Item.Meta
               avatar={
                 <Avatar
                   style={{
-                    backgroundColor: getGroupColor(item.name),
+                    backgroundColor: getGroupColor(item?.name || "Group"),
                     color: "#ffffff",
                     fontWeight: "bold",
                   }}
                 >
-                  {getGroupInitials(item.name)}
+                  {getGroupInitials(item?.name)}
                 </Avatar>
               }
               title={
@@ -61,12 +70,12 @@ function Groups({ isDarkMode }: GroupsProps): JSX.Element {
                   strong
                   className={isDarkMode ? "text-dark" : "text-light"}
                 >
-                  {item.name}
+                  {item?.name || "Unnamed Group"}
                 </Text>
               }
               description={
                 <Text style={{ color: isDarkMode ? "#ffffff99" : "#00000073" }}>
-                  {item.description}
+                  {item?.description || ""}
                 </Text>
               }
             />
