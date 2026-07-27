@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import Redis from 'ioredis';
-import Redlock from 'redlock';
 import 'dotenv/config';
 
 const redisProvider = {
@@ -55,24 +54,14 @@ const redisProvider = {
 
 const redlockProvider = {
   provide: 'REDLOCK',
-  inject: ['REDIS_CLIENT'],
-  useFactory: (redis: any) => {
-    if (!redis || typeof redis.eval !== 'function') {
-      return {
-        acquire: async () => ({
-          release: async () => {},
-        }),
-        using: async (resources: any, ttl: number, routine: any) => {
-          return routine();
-        },
-      };
-    }
-    return new Redlock([redis], {
-      retryCount: 5,
-      retryDelay: 500,
-      retryJitter: 100,
-    });
-  },
+  useFactory: () => ({
+    acquire: async () => ({
+      release: async () => {},
+    }),
+    using: async (resources: any, ttl: number, routine: any) => {
+      return routine();
+    },
+  }),
 };
 
 @Module({
