@@ -6,27 +6,46 @@ import 'dotenv/config';
 const redisProvider = {
   provide: 'REDIS_CLIENT',
   useFactory: () => {
-    // Add error handling for connection issues
-    const redis = new Redis({
-      host:
-        process.env.IS_PRODUCTION === 'true'
-          ? process.env.REDIS_HOST
-          : '127.0.0.1',
-      port:
-        process.env.IS_PRODUCTION === 'true'
-          ? Number(process.env.REDIS_PORT)
-          : 6379,
-      lazyConnect: true,
-      maxRetriesPerRequest: 1,
-      enableOfflineQueue: false,
-      retryStrategy: (times) => {
-        if (times > 2) return null; // stop retrying quickly in serverless
-        return 100;
-      },
-    });
+    const isVercelOrProd =
+      process.env.VERCEL === '1' ||
+      process.env.NODE_ENV === 'production' ||
+      process.env.IS_PRODUCTION === 'true';
+
+    const redisHost = process.env.REDIS_HOST;
+    const redisUrl = process.env.REDIS_URL;
+
+    // In production/Vercel without configured Redis host/url, disable network connection cleanly
+    if (isVercelOrProd && !redisHost && !redisUrl) {
+      const mockRedis: any = {
+        get: async () => null,
+        set: async () => 'OK',
+        del: async () => 1,
+        on: () => mockRedis,
+      };
+      return mockRedis;
+    }
+
+    const redis = redisUrl
+      ? new Redis(redisUrl, {
+          lazyConnect: true,
+          maxRetriesPerRequest: 1,
+          enableOfflineQueue: false,
+          retryStrategy: (times) => (times > 2 ? null : 100),
+        })
+      : new Redis({
+          host: redisHost || '127.0.0.1',
+          port: Number(process.env.REDIS_PORT) || 6379,
+          password: process.env.REDIS_PASSWORD || undefined,
+          lazyConnect: true,
+          maxRetriesPerRequest: 1,
+          enableOfflineQueue: false,
+          retryStrategy: (times) => (times > 2 ? null : 100),
+        });
 
     redis.on('error', (err) => {
-      console.error('Redis connection error:', err);
+      if ((err as any)?.code !== 'ECONNREFUSED') {
+        console.error('Redis connection error:', err);
+      }
     });
 
     return redis;
@@ -39,8 +58,8 @@ const redlockProvider = {
   useFactory: (redis: Redis) =>
     new Redlock([redis], {
       retryCount: 5,
-      retryDelay: 500, // ms
-      retryJitter: 100, // randomize retry
+      retryDelay: 500,
+      retryJitter: 100,
     }),
 };
 
