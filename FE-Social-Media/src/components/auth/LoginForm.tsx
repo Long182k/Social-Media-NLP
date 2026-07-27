@@ -40,7 +40,11 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
     onSuccess: (data: LoginResponse) => {
       toast.success("Login successfully");
 
-      navigate("/");
+      if (data.role === "ADMIN") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     },
   });
 
