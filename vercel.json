@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "cd FE-Social-Media && pnpm run build && cd .. && node -e \"require('fs').cpSync('FE-Social-Media/dist', 'dist', {recursive: true})\"",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file)(.*)",

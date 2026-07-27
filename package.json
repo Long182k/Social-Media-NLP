@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm --prefix FE-Social-Media run build",
-    "vercel-build": "npm --prefix FE-Social-Media run build && node -e \"require('fs').cpSync('FE-Social-Media/dist', 'dist', {recursive: true})\""
+    "build": "cd FE-Social-Media && pnpm run build"
   }
 }
