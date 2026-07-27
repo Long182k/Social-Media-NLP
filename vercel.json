@@ -13,25 +13,22 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file)(.*)",
-      "dest": "BE-Social-Media/api/index.ts"
+      "source": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file)(.*)",
+      "destination": "/BE-Social-Media/api/index.ts"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "BE-Social-Media/api/index.ts"
+      "source": "/api/(.*)",
+      "destination": "/BE-Social-Media/api/index.ts"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/FE-Social-Media/assets/$1"
+      "source": "/assets/(.*)",
+      "destination": "/FE-Social-Media/assets/$1"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/FE-Social-Media/index.html"
+      "source": "/(.*)",
+      "destination": "/FE-Social-Media/index.html"
     }
   ]
 }
