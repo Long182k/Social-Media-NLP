@@ -13,6 +13,7 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
+          "BE-Social-Media/dist/**",
           "BE-Social-Media/node_modules/.prisma/client/**",
           "BE-Social-Media/node_modules/@prisma/client/**"
         ]

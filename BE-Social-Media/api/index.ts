@@ -7,11 +7,17 @@ if (!process.env.REFRESH_JWT_SECRET) {
 }
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
+
+let AppModule: any;
+try {
+  AppModule = require('../dist/src/app.module').AppModule;
+} catch {
+  AppModule = require('../src/app.module').AppModule;
+}
 
 const server = express();
 let isInitialized = false;
