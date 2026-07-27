@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd FE-Social-Media && pnpm run build && cd .. && node -e \"require('fs').cpSync('FE-Social-Media/dist', 'dist', {recursive: true})\"",
+  "buildCommand": "pnpm --filter fe-social-media build && node -e \"require('fs').cpSync('FE-Social-Media/dist', 'dist', {recursive: true})\"",
   "outputDirectory": "dist",
   "rewrites": [
     {
