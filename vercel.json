@@ -1,41 +1,21 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "FE-Social-Media/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "BE-Social-Media/api/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "BE-Social-Media/dist/**",
-          "BE-Social-Media/node_modules/.prisma/client/**",
-          "BE-Social-Media/node_modules/@prisma/client/**"
-        ]
-      }
-    }
-  ],
   "rewrites": [
     {
       "source": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file)(.*)",
-      "destination": "/BE-Social-Media/api/index.ts"
+      "destination": "/api"
     },
     {
       "source": "/api/(.*)",
-      "destination": "/BE-Social-Media/api/index.ts"
+      "destination": "/api"
     },
     {
       "source": "/assets/(.*)",
-      "destination": "/FE-Social-Media/assets/$1"
+      "destination": "/assets/$1"
     },
     {
       "source": "/(.*)",
-      "destination": "/FE-Social-Media/index.html"
+      "destination": "/index.html"
     }
   ]
 }
