@@ -23,15 +23,11 @@
       "dest": "BE-Social-Media/api/index.ts"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "FE-Social-Media/assets/$1"
-    },
-    {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "FE-Social-Media/index.html"
+      "dest": "/index.html"
     }
   ]
 }
