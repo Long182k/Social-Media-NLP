@@ -17,6 +17,7 @@ import { PostsModule } from './posts/posts.module';
 import { PrismaService } from './prisma.service';
 import { RedisModule } from './redis/redis.module';
 import { SocketModule } from './socket/chat.module';
+import { HealthController } from './health/health.controller';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 
@@ -46,7 +47,7 @@ import { GraphQLAppModule } from './graphql/graphql.module';
     RedisModule,
     GraphQLAppModule,
   ],
-  controllers: [UsersController],
+  controllers: [UsersController, HealthController],
   providers: [
     PrismaService,
     // Set JwtAuthGuard and RolesGuard as global guards

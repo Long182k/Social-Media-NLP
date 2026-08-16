@@ -20,7 +20,8 @@ function SidebarLeft({ isDarkMode }: SidebarLeftProps): JSX.Element {
   return (
     <Sider
       width={250}
-      style={isDarkMode ? { background: "#1f1f1f" } : { background: "#ffffff" }}
+      className={`sider-left-hum ${isDarkMode ? "dark" : "light"}`}
+      style={{ background: "var(--color-paper)" }}
     >
       <Logo isDarkMode={isDarkMode} />
 

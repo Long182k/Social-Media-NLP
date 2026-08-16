@@ -1,5 +1,7 @@
+/* Hallmark · component: composer card · genre: playful · theme: Hum · design-system: FE-Social-Media/design.md */
 .create-post-card {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: var(--shadow-contact), var(--shadow-ambient) !important;
+  background: var(--color-paper) !important;
 }
 
 .create-post-card .ant-input-textarea textarea {
@@ -7,38 +9,38 @@
 }
 
 .create-post-card.light .ant-btn-text {
-  background-color: #f2f2f2;
-  color: rgba(0, 0, 0, 0.7);
+  background-color: var(--color-paper-2);
+  color: color-mix(in oklch, var(--color-ink) 80%, transparent);
   padding: 8px 12px;
 }
 
 .create-post-card.light .ant-btn-text:hover {
-  background-color: #f2f2f2;
-  color: rgba(0, 0, 0, 0.7);
+  background-color: var(--color-paper-3);
+  color: var(--color-ink);
 }
 
 .create-post-card.dark {
-  background-color: #242526 !important;
-  border: 1px solid #3e4042;
+  background-color: var(--color-paper-2) !important;
+  border: 1px solid var(--color-rule);
   box-shadow: none !important;
 }
 
 .create-post-card.dark .ant-input {
-  color: #e4e6eb !important;
+  color: var(--color-ink) !important;
 }
 
 .create-post-card.dark .ant-input::placeholder {
-  color: #b0b3b8;
+  color: var(--color-ink-2);
 }
 
 .create-post-card.dark .ant-btn-text {
-  color: #b0b3b8;
+  color: var(--color-ink-2);
   padding: 8px 12px;
 }
 
 .create-post-card.dark .ant-btn-text:hover {
-  background-color: #3a3b3c;
-  color: #e4e6eb;
+  background-color: var(--color-paper-3);
+  color: var(--color-ink);
 }
 
 .create-post-card .ant-space-item {
@@ -53,78 +55,70 @@
   flex: 1;
 }
 
-.create-post-card.dark .post-actions .ant-btn {
-  color: #e4e6eb;
-}
-
-.create-post-card.dark .post-actions .ant-btn:hover {
-  background-color: #3a3b3c;
-}
-
 .create-post-card .post-actions .ant-btn {
   height: 40px;
-  border-radius: 6px;
+  border-radius: var(--radius-pill);
 }
 
 .create-post-card .create-btn {
-  background-color: #1b1b1b;
-  color: white;
+  background-color: var(--color-accent) !important;
+  color: var(--color-ink) !important;
+  font-weight: 600;
+  box-shadow: 0 3px 0 0 var(--color-accent-deep);
+}
+
+.create-post-card .create-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 0 var(--color-accent-deep);
+}
+
+.create-post-card .create-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--color-accent-deep);
 }
 
 .create-post-card.dark .create-btn {
-  background-color: #505151;
+  background-color: var(--color-accent) !important;
 }
 
 .create-post-card .create-btn:disabled {
-  background-color: #e4e6eb;
-  opacity: 0.6;
-}
-
-.create-post-card.dark .create-btn:disabled {
-  background-color: #505151;
-  opacity: 0.6;
+  opacity: 0.5;
+  box-shadow: none;
 }
 
 .preview-area {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--space-2xs);
+  margin-top: var(--space-2xs);
 }
 
 .preview-item {
   position: relative;
-  border-radius: 8px;
+  border-radius: var(--radius-input);
   overflow: hidden;
 }
 
 .preview-item img,
 .preview-item video {
   display: block;
-  border-radius: 8px;
+  border-radius: var(--radius-input);
 }
 
 .remove-button {
   position: absolute !important;
   top: 8px;
   right: 8px;
-  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: oklch(20% 0.012 250 / 0.5) !important;
   border: none !important;
   padding: 4px !important;
   height: auto !important;
-  color: white !important;
+  color: var(--color-paper) !important;
+  border-radius: var(--radius-pill);
 }
 
 .remove-button:hover {
-  background-color: rgba(0, 0, 0, 0.7) !important;
-}
-
-.dark .remove-button {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.dark .remove-button:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: oklch(20% 0.012 250 / 0.7) !important;
 }
 
 .ant-popover {

@@ -1,87 +1,289 @@
+/* Hallmark · genre: playful · macrostructure: Workbench (app shell) · theme: Hum · nav: N3 side-rail · design-system: FE-Social-Media/design.md · designed-as-app
+ * Hallmark · pre-emit critique: P5 H4 E4 S5 R4 V5
+ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
+/* ---------- Hum tokens (the only colour values in the system) ---------- */
 :root {
+  --color-paper: oklch(97% 0.012 95);
+  --color-paper-2: oklch(94% 0.016 95);
+  --color-paper-3: oklch(91% 0.020 95);
+  --color-ink: oklch(20% 0.012 250);
+  --color-ink-2: oklch(42% 0.012 250);
+  --color-rule: oklch(88% 0.016 95);
+  --color-accent: oklch(86% 0.18 95);
+  --color-accent-deep: oklch(76% 0.20 95);
+  --color-accent-2: oklch(66% 0.18 235);
+  --color-accent-3: oklch(68% 0.24 18);
+  --color-mint: oklch(80% 0.16 150);
+  --color-lavender: oklch(74% 0.16 305);
+  --color-focus: oklch(66% 0.18 235);
+
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading: 'Outfit', sans-serif;
-  
-  --color-bg-dark: #090d16;
-  --color-card-dark: rgba(15, 23, 42, 0.75);
-  --color-border-dark: rgba(255, 255, 255, 0.08);
-  
-  --color-positive: #10b981;
-  --color-neutral: #06b6d4;
-  --color-negative: #f43f5e;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-display: clamp(2.4rem, 4vw + 1rem, 4rem);
+
+  --radius-card: 20px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-short: 220ms;
+
+  --shadow-contact: 0 2px 6px -2px oklch(20% 0.012 250 / 0.10);
+  --shadow-ambient: 0 12px 32px -16px oklch(20% 0.012 250 / 0.14);
+  --shadow-cast: 0 6px 12px -3px oklch(76% 0.20 95 / 0.45);
+}
+
+/* Night variant — the app's dark toggle remaps paper/ink; accents stay */
+html[data-theme="dark"] {
+  --color-paper: oklch(22% 0.015 250);
+  --color-paper-2: oklch(26% 0.018 250);
+  --color-paper-3: oklch(31% 0.020 250);
+  --color-ink: oklch(94% 0.008 95);
+  --color-ink-2: oklch(72% 0.008 95);
+  --color-rule: oklch(36% 0.015 250);
+  --color-accent-deep: oklch(70% 0.19 95);
+  --shadow-contact: 0 2px 6px -2px oklch(0% 0 0 / 0.4);
+  --shadow-ambient: 0 12px 32px -16px oklch(0% 0 0 / 0.55);
+}
+
+html,
+body {
+  overflow-x: clip;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-bg-dark);
-  color: #f8fafc;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 85% 75%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.06) 0%, transparent 60%);
-  background-attachment: fixed;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Glassmorphism primitives */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Legacy aliases kept so untouched templates don't break */
+:root {
+  --font-heading: var(--font-sans);
+  --color-bg-dark: var(--color-paper);
+  --color-card-dark: var(--color-paper-2);
+  --color-border-dark: var(--color-rule);
 }
 
-.glass-card {
-  background: rgba(30, 41, 59, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* ---------- Surfaces ---------- */
+.glass-panel,
+.hum-panel {
+  background: var(--color-paper);
+  border: 1px dashed var(--color-rule);
+  border-radius: var(--radius-card);
 }
 
-.glass-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.15);
-  transform: translateY(-2px);
+.glass-card,
+.hum-card {
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-contact), var(--shadow-ambient);
+  transition: transform var(--dur-short) var(--ease-spring), box-shadow var(--dur-short);
 }
 
-/* NLP Sentiment Badges */
-.badge-sentiment-positive {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.glass-card:hover,
+.hum-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-contact), var(--shadow-ambient), 0 18px 40px -18px oklch(20% 0.012 250 / 0.18);
 }
 
-.badge-sentiment-neutral {
-  background: rgba(6, 182, 212, 0.15);
-  color: #22d3ee;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+/* Multi-accent card tints — each card owns one accent */
+.tint-pear   { background: color-mix(in oklch, var(--color-accent) 6%, var(--color-paper)); }
+.tint-cyan   { background: color-mix(in oklch, var(--color-accent-2) 6%, var(--color-paper)); }
+.tint-coral  { background: color-mix(in oklch, var(--color-accent-3) 6%, var(--color-paper)); }
+.tint-mint   { background: color-mix(in oklch, var(--color-mint) 8%, var(--color-paper)); }
+.tint-lav    { background: color-mix(in oklch, var(--color-lavender) 8%, var(--color-paper)); }
+.tint-pear:hover   { background: color-mix(in oklch, var(--color-accent) 12%, var(--color-paper)); }
+.tint-cyan:hover   { background: color-mix(in oklch, var(--color-accent-2) 12%, var(--color-paper)); }
+.tint-coral:hover  { background: color-mix(in oklch, var(--color-accent-3) 12%, var(--color-paper)); }
+.tint-mint:hover   { background: color-mix(in oklch, var(--color-mint) 14%, var(--color-paper)); }
+.tint-lav:hover    { background: color-mix(in oklch, var(--color-lavender) 14%, var(--color-paper)); }
+
+/* ---------- Labels ---------- */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+  opacity: 0.8;
 }
 
-.badge-sentiment-negative {
-  background: rgba(244, 63, 94, 0.15);
-  color: #fb7185;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+/* Highlight must follow the text — clipped gradient, never a floating bar */
+em,
+.hl {
+  color: inherit;
+  font-style: normal;
+  background-image: linear-gradient(color-mix(in oklch, var(--color-accent) 55%, transparent) 0 0);
+  background-repeat: no-repeat;
+  background-size: 100% 0.32em;
+  background-position: 0 82%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding-bottom: 0.02em;
 }
 
-/* Glowing Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ---------- Push-button system (hum.md §1, verbatim anatomy) ---------- */
+.btn {
+  --btn-face: var(--color-accent);
+  --btn-ink: var(--color-ink);
+  --btn-edge: var(--color-accent-deep);
+  --btn-cast: oklch(76% 0.20 95 / 0.45);
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+  padding: 0.8rem 1.4rem; font-weight: 600; border: 0; border-radius: var(--radius-pill);
+  color: var(--btn-ink); background: var(--btn-face); cursor: pointer; position: relative; isolation: isolate;
+  box-shadow: 0 4px 0 0 var(--btn-edge), 0 6px 12px -3px var(--btn-cast);
+  transform: translateY(0);
+  transition: transform 140ms cubic-bezier(0.2,0.7,0.3,1), box-shadow 140ms cubic-bezier(0.2,0.7,0.3,1), background-color 160ms;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
 }
-::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast); }
+.btn:active { transform: translateY(3px);  box-shadow: 0 1px 0 0 var(--btn-edge), 0 2px 6px -2px var(--btn-cast); transition-duration: 70ms; }
+.btn:focus-visible { outline: 3px solid color-mix(in oklch, var(--btn-edge) 70%, var(--color-focus)); outline-offset: 3px; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; transform: none; box-shadow: 0 4px 0 0 var(--btn-edge); }
+
+/* ---------- Sentiment system (NLP) ---------- */
+.badge-sentiment-positive,
+.badge-sentiment-good {
+  background: color-mix(in oklch, var(--color-mint) 18%, var(--color-paper));
+  color: oklch(35% 0.12 150);
+  border: 1px solid color-mix(in oklch, var(--color-mint) 45%, transparent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 2px 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
+.badge-sentiment-neutral,
+.badge-sentiment-moderate {
+  background: color-mix(in oklch, var(--color-accent) 22%, var(--color-paper));
+  color: oklch(45% 0.14 95);
+  border: 1px solid color-mix(in oklch, var(--color-accent) 55%, transparent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 2px 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-sentiment-negative,
+.badge-sentiment-bad {
+  background: color-mix(in oklch, var(--color-accent-3) 14%, var(--color-paper));
+  color: oklch(48% 0.19 18);
+  border: 1px solid color-mix(in oklch, var(--color-accent-3) 45%, transparent);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 2px 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- Character moment (one reacting mark) ---------- */
+@keyframes hum-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+@keyframes star-burst {
+  0%   { transform: scale(0) rotate(0deg);   opacity: 1; }
+  60%  { transform: scale(1.2) rotate(35deg); opacity: 0.9; }
+  100% { transform: scale(1.4) rotate(45deg); opacity: 0; }
+}
+.hum-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--color-accent);
+  animation: hum-pulse 4s ease-in-out infinite;
+}
+.star-burst {
+  position: absolute;
+  width: 24px; height: 24px;
+  background:
+    linear-gradient(90deg, transparent 47%, var(--color-accent-3) 47% 53%, transparent 53%),
+    linear-gradient(0deg,  transparent 47%, var(--color-accent-3) 47% 53%, transparent 53%);
+  animation: star-burst 420ms ease-out forwards;
+  pointer-events: none;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-paper-2); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
-  border-radius: 9999px;
+  background: color-mix(in oklch, var(--color-accent-2) 45%, var(--color-paper-3));
+  border-radius: var(--radius-pill);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.6);
+  background: color-mix(in oklch, var(--color-accent-2) 70%, var(--color-paper-3));
+}
+
+/* ---------- Ant Design overrides (token-mapped) ---------- */
+.ant-card {
+  border-radius: var(--radius-card) !important;
+  background: var(--color-paper) !important;
+}
+.ant-btn-primary {
+  background: var(--color-accent) !important;
+  border-color: var(--color-accent-deep) !important;
+  color: var(--color-ink) !important;
+  border-radius: var(--radius-pill) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 0 0 var(--color-accent-deep), 0 6px 12px -3px var(--shadow-cast) !important;
+  transition: transform 140ms cubic-bezier(0.2,0.7,0.3,1), box-shadow 140ms cubic-bezier(0.2,0.7,0.3,1) !important;
+}
+.ant-btn-primary:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 0 var(--color-accent-deep), 0 12px 22px -4px var(--shadow-cast) !important;
+  background: var(--color-accent) !important;
+}
+.ant-btn-primary:not(:disabled):active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-accent-deep) !important;
+  transition-duration: 70ms;
+}
+.ant-btn-default {
+  border-radius: var(--radius-pill) !important;
+  border-color: var(--color-rule) !important;
+  background: var(--color-paper) !important;
+  color: var(--color-ink) !important;
+}
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-select .ant-select-selector {
+  border-radius: var(--radius-input) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hum-dot { animation: none; }
+  .star-burst { display: none; }
+  .glass-card:hover, .hum-card:hover { transform: none; }
+  .ant-btn-primary:not(:disabled):hover,
+  .ant-btn-primary:not(:disabled):active { transform: none; }
 }

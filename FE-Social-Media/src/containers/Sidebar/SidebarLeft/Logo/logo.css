@@ -1,0 +1,15 @@
+/* Hallmark · component: logo · genre: playful · theme: Hum · design-system: FE-Social-Media/design.md */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin: var(--space-md) var(--space-sm) var(--space-md) var(--space-md);
+}
+
+.logo-word {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+}

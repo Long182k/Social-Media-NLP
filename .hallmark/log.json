@@ -1,0 +1,20 @@
+[
+  {
+    "date": "2026-08-17",
+    "scope": "app",
+    "brief": "Connected · Social-Media-NLP · full visual overhaul",
+    "genre": "playful",
+    "theme": "Hum",
+    "macrostructure": "Split Studio (auth) + Workbench (shell) + Catalogue (groups/events)",
+    "nav": "N3 side-rail",
+    "footer": "none (app shell)",
+    "enrichment": "character moment only (pear dot, CSS-built)",
+    "axes": { "paper": "light", "display": "rounded-sans", "accent": "multi" },
+    "inferences": {
+      "audience": "community users of a connected social platform",
+      "use case": "browse feed, post, chat",
+      "tone": "playful"
+    },
+    "critique": { "P": 5, "H": 4, "E": 4, "S": 5, "R": 4, "V": 5 }
+  }
+]

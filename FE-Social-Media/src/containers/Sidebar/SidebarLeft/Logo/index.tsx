@@ -1,20 +1,12 @@
-import { Typography } from "antd";
 import { LogoProps } from "./logo.interface";
+import "./logo.css";
 
-const { Title } = Typography;
-
-function Logo({ isDarkMode }: LogoProps): JSX.Element {
+function Logo(props: LogoProps): JSX.Element {
+  void props;
   return (
     <div className="logo">
-      <Title
-        level={3}
-        style={{
-          margin: "12px",
-          color: isDarkMode ? "#ffffff" : "#1E90FF	",
-        }}
-      >
-        Connected
-      </Title>
+      <span className="logo-word">Connected</span>
+      <span className="hum-dot" aria-hidden="true" />
     </div>
   );
 }

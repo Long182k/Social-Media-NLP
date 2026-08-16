@@ -1,8 +1,9 @@
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ConfigProvider } from "antd";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +11,7 @@ import { queryClient } from "./@util/lib/queryClient";
 import { apolloClient } from "./api/apolloClient";
 import "./App.css";
 import CenterContent from "./containers/CenterLayout/CenterContent";
+import { humDarkTheme, humLightTheme } from "./theme/antdTheme";
 import Dashboard from "./routes/Admin/Dashboard";
 import EventManagement from "./routes/Admin/Event Management";
 import GroupManagement from "./routes/Admin/Group Management";
@@ -33,6 +35,17 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const { userInfo } = useAppStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDarkMode ? "dark" : "light"
+    );
+    document.body.style.backgroundColor = isDarkMode
+      ? "#23242e"
+      : "oklch(97% 0.012 95)";
+    document.body.style.color = isDarkMode ? "#f3f0e6" : "oklch(20% 0.012 250)";
+  }, [isDarkMode]);
 
   // Initialize socket connection and axios auth on app mount
   // useSocketInitializer();
@@ -59,17 +72,18 @@ function App() {
     checked: boolean | ((prevState: boolean) => boolean)
   ) => {
     setIsDarkMode(checked);
-    document.body.style.backgroundColor = checked ? "#141414" : "#ffffff";
-    document.body.style.color = checked ? "#ffffff" : "#000000";
   };
 
   axios.defaults.withCredentials = true;
+
+  const antdConfig = isDarkMode ? humDarkTheme : humLightTheme;
 
   return (
     <div>
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
+          <ConfigProvider theme={antdConfig}>
+            <BrowserRouter>
             <Routes>
               {/* Wrap protected routes inside Layout */}
               <Route
@@ -169,7 +183,8 @@ function App() {
               {/* Other routes outside layout */}
               <Route path="/login" element={<LoginPage />} />
             </Routes>
-          </BrowserRouter>
+            </BrowserRouter>
+          </ConfigProvider>
 
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

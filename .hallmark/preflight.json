@@ -1,0 +1,30 @@
+{
+  "scanned": "2026-08-17",
+  "target": "FE-Social-Media",
+  "findings": {
+    "fontStack": {
+      "loaded": ["Plus Jakarta Sans (300-800)", "Outfit (400-800)"],
+      "source": "FE-Social-Media/src/index.css:2 (Google Fonts @import)",
+      "stale": ["Great Vibes (index.html:7, unused script serif)"]
+    },
+    "palette": {
+      "before": "hand-coded hex inline styles + dark glassmorphism (#090d16 base, rgba bloom gradients, #6366F1 ad-hoc primary)",
+      "sources": ["FE-Social-Media/src/index.css:4-15", "Login/LoginForm inline styles"]
+    },
+    "motion": {
+      "framerMotion": "installed, largely unused on app screens",
+      "stance": "motion-on (hover-responsive)"
+    },
+    "spacing": "mixed raw px inline; no scale",
+    "framework": "React 18 + Vite 5 + Ant Design v5 + Tailwind v4 (@import only)",
+    "aiSlopDetected": [
+      "glassmorphism (.glass-panel/.glass-card)",
+      "purple radial-gradient bloom background",
+      "centered-hero login card",
+      "gradient event grid band"
+    ]
+  },
+  "preserved": ["Plus Jakarta Sans", "Ant Design v5", "route tree + IA", "isDarkMode toggle plumbing"],
+  "introduced": ["Hum theme tokens (oklch)", "design.md system", "N3 side-rail nav voice", "push-button system", "star-burst on primary success"],
+  "removed": ["Great Vibes font", "glassmorphism", "Outfit display face (kept available but unassigned)", "purple bloom background", "stock gradient band"]
+}

@@ -1,6 +1,7 @@
+/* Hallmark · component: post card · genre: playful · theme: Hum · design-system: FE-Social-Media/design.md */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
+  scrollbar-color: var(--color-rule) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -12,103 +13,73 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 3px;
+  background-color: color-mix(in oklch, var(--color-accent-2) 40%, var(--color-rule));
+  border-radius: var(--radius-pill);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #666;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #888;
+  background-color: color-mix(in oklch, var(--color-accent-2) 60%, var(--color-rule));
 }
 
 .action-button {
   padding: 8px 16px;
   height: auto;
+  border-radius: var(--radius-pill);
 }
 
 .action-button:hover .anticon {
   transform: scale(1.1);
-  color: #1677ff !important;
+  color: var(--color-accent-2) !important;
 }
 
 .action-button.dark:hover .anticon {
-  color: #1677ff !important;
-}
-
-.dark .ant-btn-text {
-  color: #ffffff !important;
-}
-
-.dark .ant-btn-text:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
+  color: var(--color-accent-2) !important;
 }
 
 .post-actions .ant-btn-text {
   padding: 4px 8px;
-}
-
-.post-actions.dark .ant-btn-text {
-  color: #ffffff;
-}
-
-.post-actions.dark .ant-btn-text:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
 }
 
 .post-actions .ant-btn-text:hover {
-  background-color: transparent !important;
+  background-color: color-mix(in oklch, var(--color-accent) 14%, transparent) !important;
 }
 
 .post-actions .edit-btn:hover {
-  color: #1890ff !important;
+  color: var(--color-accent-2) !important;
 }
 
 .post-actions .delete-btn:hover {
-  color: #ff4d4f !important;
-}
-
-.post-actions.dark .ant-btn-text {
-  color: #ffffff;
-}
-
-.post-actions.dark .edit-btn:hover {
-  color: #40a9ff !important;
-}
-
-.post-actions.dark .delete-btn:hover {
-  color: #ff7875 !important;
+  color: var(--color-accent-3) !important;
 }
 
 .sentiment-indicator {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-left: 8px;
+  margin-left: var(--space-2xs);
   cursor: help;
 }
 
 .sentiment-good {
-  background-color: #52c41a;
+  background-color: var(--color-mint);
 }
 
 .sentiment-moderate {
-  background-color: #faad14;
+  background-color: var(--color-accent);
 }
 
 .sentiment-bad {
-  background-color: #ff4d4f;
+  background-color: var(--color-accent-3);
 }
 
 .post-header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2xs);
+}
+
+/* Post card physics — soft single layer, hover lift */
+.post-item.ant-card {
+  transition: transform var(--dur-short) var(--ease-spring), box-shadow var(--dur-short);
 }

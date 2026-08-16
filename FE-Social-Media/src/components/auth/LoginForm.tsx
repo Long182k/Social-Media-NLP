@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Button, Col, Form, Input, Row, Space, Typography, Modal } from "antd";
+import { Button, Form, Input, Modal, Space, Typography } from "antd";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,7 +14,7 @@ import { useAppStore } from "../../store";
 import { useState } from "react";
 import { forgotPassword } from "../../api/auth";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
   >({
     mutationFn: login,
     onSuccess: (data: LoginResponse) => {
-      toast.success("Login successfully");
+      toast.success("You're in.");
 
       if (data.role === "ADMIN") {
         navigate("/dashboard");
@@ -73,193 +73,91 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
   };
 
   return (
-    <Row
-      justify="center"
-      align="middle"
-      style={{ height: "100%", padding: "20px" }}
-    >
-      <Col style={{ width: "100%", maxWidth: "580px" }}>
-        {/* Connected Brand Header */}
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <Title
-            level={2}
-            style={{
-              color: "#6366F1",
-              fontSize: "32px",
-              fontWeight: "600",
-              marginBottom: "0",
-            }}
+    <div className="login-card">
+      <div className="login-brandline">
+        <span className="login-brand-word">Connected</span>
+        <span className="hum-dot" style={{ width: 10, height: 10 }} />
+      </div>
+
+      <Space direction="vertical" style={{ width: "100%" }} size={20}>
+        <div>
+          <h2 className="login-card-title">Login to your account</h2>
+          <Text className="login-card-sub">
+            Enter your credentials to continue
+          </Text>
+        </div>
+
+        <Form layout="vertical" onFinish={LoginFinish} requiredMark={false}>
+          <Form.Item
+            label={<span className="login-field-label">Username</span>}
+            name="username"
+            rules={[
+              { required: true, message: "Please enter your username!" },
+            ]}
+            style={{ marginBottom: 20 }}
           >
-            Connected
-          </Title>
+            <Input
+              placeholder="Enter your username"
+              size="large"
+              autoComplete="username"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<span className="login-field-label">Password</span>}
+            name="password"
+            rules={[
+              { required: true, message: "Please enter your password!" },
+            ]}
+            style={{ marginBottom: 12 }}
+          >
+            <Input.Password
+              placeholder="••••••••••"
+              size="large"
+              autoComplete="current-password"
+            />
+          </Form.Item>
+
+          <div style={{ textAlign: "right", marginBottom: 24 }}>
+            <Button
+              type="link"
+              className="login-link"
+              onClick={() => setShowForgotPassword(true)}
+              style={{ padding: 0, height: "auto" }}
+            >
+              Forgot password?
+            </Button>
+          </div>
+
+          <Form.Item style={{ marginBottom: 24 }}>
+            <Button
+              type="primary"
+              size="large"
+              block
+              htmlType="submit"
+              loading={loginMutation.isPending}
+            >
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+
+        <div style={{ textAlign: "center" }}>
+          <Text className="login-card-sub">
+            Don't have an account?{" "}
+            <Text
+              strong
+              className="login-switch"
+              onClick={() => onSwitchMode(SCREEN_MODE.SIGN_UP)}
+            >
+              Sign up
+            </Text>
+          </Text>
         </div>
-
-        {/* Login Card */}
-        <div
-          style={{
-            background: "#FFFFFF",
-            borderRadius: "12px",
-            padding: "40px",
-            boxShadow: "0 4px 24px rgba(0, 0, 0, 0.08)",
-            border: "1px solid #F1F5F9",
-          }}
-        >
-          <Space direction="vertical" style={{ width: "100%" }} size={28}>
-            {/* Header */}
-            <div>
-              <Title
-                level={3}
-                style={{
-                  marginBottom: "8px",
-                  color: "#1E293B",
-                  fontSize: "24px",
-                  fontWeight: "600",
-                }}
-              >
-                Login to your account
-              </Title>
-              <Text style={{ color: "#64748B", fontSize: "14px" }}>
-                Enter your credentials to continue
-              </Text>
-            </div>
-
-            <Form layout="vertical" onFinish={LoginFinish} requiredMark={false}>
-              <Form.Item
-                label={
-                  <span
-                    style={{
-                      color: "#374151",
-                      fontWeight: "500",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Username <span style={{ color: "#EF4444" }}>*</span>
-                  </span>
-                }
-                name="username"
-                rules={[
-                  { required: true, message: "Please enter your username!" },
-                ]}
-                style={{ marginBottom: "20px" }}
-              >
-                <Input
-                  placeholder="Enter your username"
-                  size="large"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #D1D5DB",
-                    padding: "12px 16px",
-                    fontSize: "14px",
-                    backgroundColor: "#F9FAFB",
-                  }}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={
-                  <span
-                    style={{
-                      color: "#374151",
-                      fontWeight: "500",
-                      fontSize: "14px",
-                    }}
-                  >
-                    Password <span style={{ color: "#EF4444" }}>*</span>
-                  </span>
-                }
-                name="password"
-                rules={[
-                  { required: true, message: "Please enter your password!" },
-                ]}
-                style={{ marginBottom: "12px" }}
-              >
-                <Input.Password
-                  placeholder="••••••••••"
-                  size="large"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #D1D5DB",
-                    padding: "12px 16px",
-                    fontSize: "14px",
-                    backgroundColor: "#F9FAFB",
-                  }}
-                />
-              </Form.Item>
-
-              {/* Forgot Password Link */}
-              <div style={{ textAlign: "right", marginBottom: "24px" }}>
-                <Button
-                  type="link"
-                  onClick={() => setShowForgotPassword(true)}
-                  style={{
-                    color: "#6366F1",
-                    fontSize: "14px",
-                    padding: "0",
-                    height: "auto",
-                    fontWeight: "400",
-                  }}
-                >
-                  Forgot password?
-                </Button>
-              </div>
-
-              {/* Login Button */}
-              <Form.Item style={{ marginBottom: "24px" }}>
-                <Button
-                  type="primary"
-                  size="large"
-                  block
-                  htmlType="submit"
-                  loading={loginMutation.isPending}
-                  style={{
-                    backgroundColor: "#6366F1",
-                    borderColor: "#6366F1",
-                    borderRadius: "8px",
-                    height: "48px",
-                    fontSize: "16px",
-                    fontWeight: "500",
-                    boxShadow: "none",
-                  }}
-                >
-                  Login
-                </Button>
-              </Form.Item>
-            </Form>
-
-            {/* Sign Up Link */}
-            <div style={{ textAlign: "center" }}>
-              <Text style={{ color: "#64748B", fontSize: "14px" }}>
-                Don't have an account?{" "}
-                <Text
-                  strong
-                  onClick={() => onSwitchMode(SCREEN_MODE.SIGN_UP)}
-                  style={{
-                    cursor: "pointer",
-                    userSelect: "none",
-                    color: "#6366F1",
-                    fontWeight: "500",
-                  }}
-                >
-                  Sign up
-                </Text>
-              </Text>
-            </div>
-          </Space>
-        </div>
-      </Col>
+      </Space>
 
       <Modal
-        title={
-          <span
-            style={{
-              color: "#1E293B",
-              fontSize: "18px",
-              fontWeight: "600",
-            }}
-          >
-            Forgot Password
-          </span>
-        }
+        title="Forgot Password"
         open={showForgotPassword}
         onCancel={() => {
           setShowForgotPassword(false);
@@ -272,11 +170,6 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
               setShowForgotPassword(false);
               setForgotEmail("");
             }}
-            style={{
-              borderRadius: "8px",
-              border: "1px solid #D1D5DB",
-              color: "#64748B",
-            }}
           >
             Cancel
           </Button>,
@@ -285,23 +178,18 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
             type="primary"
             loading={forgotPasswordMutation.isPending}
             onClick={handleForgotPassword}
-            style={{
-              backgroundColor: "#6366F1",
-              borderColor: "#6366F1",
-              borderRadius: "8px",
-            }}
           >
             Send
           </Button>,
         ]}
       >
-        <div style={{ paddingTop: "16px" }}>
+        <div style={{ paddingTop: 16 }}>
           <p
             style={{
-              marginBottom: "16px",
-              fontSize: "14px",
-              color: "#64748B",
-              lineHeight: "1.5",
+              marginBottom: 16,
+              fontSize: 14,
+              color: "var(--color-ink-2)",
+              lineHeight: 1.5,
             }}
           >
             Enter your email address and we'll send you instructions to reset
@@ -312,15 +200,10 @@ const LoginForm = ({ onSwitchMode }: LoginFormProp) => {
             value={forgotEmail}
             onChange={(e) => setForgotEmail(e.target.value)}
             size="large"
-            style={{
-              borderRadius: "8px",
-              border: "1px solid #D1D5DB",
-              backgroundColor: "#F9FAFB",
-            }}
           />
         </div>
       </Modal>
-    </Row>
+    </div>
   );
 };
 

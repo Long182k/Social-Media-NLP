@@ -1,10 +1,13 @@
+/* Hallmark · genre: playful · macrostructure: Workbench (app shell) · theme: Hum · nav: N3 side-rail · design-system: FE-Social-Media/design.md · designed-as-app
+ * Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4
+ */
 .homepage-layout {
   display: flex;
   justify-content: center;
-  /* max-width: 1440px; */
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
+  background: var(--color-paper);
 }
 
 .main-content-layout {
@@ -12,6 +15,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background: color-mix(in oklch, var(--color-paper-2) 55%, var(--color-paper));
 }
 
 .scrollable-content {
@@ -21,14 +25,14 @@
 }
 
 .main-content {
-  margin: 0 24px 0 24px;
+  margin: 0 24px;
 }
 
 .stories-card,
 .create-post-card,
 .post-list-card {
   margin: 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
 }
 
 .stories-list {
@@ -43,21 +47,21 @@
 }
 
 .post-item {
-  padding: 16px;
+  padding: var(--space-md);
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2xs);
 }
 
 .post-info {
-  margin-left: 12px;
+  margin-left: var(--space-xs);
 }
 
 .right-card {
-  margin-top: 16px;
+  margin-top: var(--space-sm);
 }
 
 .recent-chats {
@@ -65,22 +69,18 @@
 }
 
 .event-grid {
-  padding: 8px;
-  margin: 8px 0;
-  background: linear-gradient(to right, #c6ffdd, #fbd786, #f7797d);
-  border-radius: 8px;
+  padding: var(--space-2xs);
+  margin: var(--space-2xs) 0;
+  background: var(--color-paper-3);
+  border-radius: var(--radius-input);
 }
 
 .ant-menu-item.ant-menu-item-selected {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .menu-sider-left.ant-menu-dark {
   background: none !important;
-}
-
-.ant-btn-text:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .ant-card-bordered {
@@ -92,7 +92,7 @@
 }
 
 .contacts {
-  padding-left: 16px;
+  padding-left: var(--space-sm);
 }
 
 .logout-icon {
@@ -130,17 +130,18 @@
   }
 }
 
-/* StoriesComponent.css */
+/* Stories strip */
 .stories-container {
   display: flex;
-  padding: 16px;
-  margin: 16px;
-  background-color: white;
-  border-radius: 16px;
+  padding: var(--space-sm);
+  margin: var(--space-sm);
+  background-color: var(--color-paper);
+  border: 1px dashed var(--color-rule);
+  border-radius: var(--radius-card);
 }
 
 .stories-container.dark-mode {
-  background-color: #1f1f1f;
+  background-color: var(--color-paper-2);
 }
 
 .story-item {
@@ -162,6 +163,8 @@
   border-radius: 50%;
   font-size: 24px;
   border: none;
+  background: var(--color-accent);
+  box-shadow: 0 3px 0 0 var(--color-accent-deep);
 }
 
 .story-avatar-container {
@@ -171,27 +174,28 @@
 }
 
 .story-avatar {
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2xs);
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform var(--dur-short) var(--ease-spring),
+    box-shadow var(--dur-short);
 }
 
 .story-avatar:hover {
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 3px var(--color-accent),
+    0 8px 18px -8px oklch(20% 0.012 250 / 0.3);
   transform: scale(1.05);
 }
 
 .story-name {
-  margin-top: 8px;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.85);
+  margin-top: var(--space-2xs);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
 }
 
 .stories-container.dark-mode .story-name {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-ink);
 }
 
-/* Make the stories component horizontally scrollable on small screens */
 @media (max-width: 768px) {
   .stories-container {
     overflow-x: auto;

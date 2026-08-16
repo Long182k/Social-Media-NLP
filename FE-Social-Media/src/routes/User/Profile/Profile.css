@@ -1,52 +1,26 @@
+/* Hallmark · genre: playful · macrostructure: Workbench · theme: Hum · design-system: FE-Social-Media/design.md · designed-as-app */
 .profile-container {
-  border-radius: 16px;
-  margin: 16px;
-  transition: all 0.3s ease;
+  border-radius: var(--radius-card);
+  margin: var(--space-md);
+  transition: box-shadow var(--dur-short);
   overflow: hidden;
 }
 
-.profile-container.light {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
+.profile-container.light,
 .profile-container.dark {
-  background: #1f1f1f;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  background: var(--color-paper);
+  box-shadow: var(--shadow-contact), var(--shadow-ambient);
 }
 
-.profile-info.dark {
-  color: #ffffff;
-}
-
+.profile-info.dark,
 .profile-info.light {
-  color: #000000;
-}
-
-.profile-form.dark .ant-form-item-label > label {
-  color: #ffffff;
-}
-
-.profile-form.dark .ant-input,
-.profile-form.dark .ant-input-textarea {
-  background-color: #2f2f2f;
-  color: #ffffff;
-  border-color: #434343;
-}
-
-.profile-form.dark .ant-picker {
-  background-color: #2f2f2f;
-  border-color: #434343;
-}
-
-.profile-form.dark .ant-picker-input > input {
-  color: #ffffff;
+  color: var(--color-ink);
 }
 
 .cover-photo {
   height: 250px;
   position: relative;
-  background: #e9ecef;
+  background: var(--color-paper-3);
 }
 
 .cover-photo img {
@@ -56,13 +30,13 @@
 }
 
 .profile-info {
-  padding: 0 24px 24px;
+  padding: 0 var(--space-lg) var(--space-lg);
   position: relative;
 }
 
 .avatar-container {
   margin-top: -50px;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-sm);
   position: relative;
   display: inline-block;
 }
@@ -73,6 +47,7 @@
   border-radius: 50%;
   border-width: 4px;
   border-style: solid;
+  border-color: var(--color-paper);
   object-fit: cover;
 }
 
@@ -83,7 +58,7 @@
 }
 
 .profile-details {
-  margin-top: 16px;
+  margin-top: var(--space-sm);
 }
 
 .profile-form {
@@ -95,59 +70,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-md);
 }
 
 .profile-header h2 {
-  font-size: 24px;
+  font-size: var(--text-xl);
   font-weight: 600;
+  letter-spacing: -0.02em;
   margin: 0;
+  color: var(--color-ink);
 }
 
 .birth-date {
-  color: #65676b;
-  font-size: 14px;
-  margin-bottom: 12px;
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .bio {
-  font-size: 16px;
+  font-size: var(--text-md);
   line-height: 1.5;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-lg);
   white-space: pre-wrap;
 }
 
 .profile-stats {
   display: flex;
-  gap: 32px;
-  padding: 16px 0;
-  border-top: 1px solid #e4e6eb;
+  gap: var(--space-xl);
+  padding: var(--space-md) 0;
+  border-top: 1px dashed var(--color-rule);
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-3xs);
 }
 
 .stat-value {
-  font-size: 20px;
+  font-size: var(--text-lg);
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
 }
 
 .stat-label {
-  color: #65676b;
-  font-size: 14px;
-}
-
-.dark .birth-date,
-.dark .stat-label {
-  color: #b0b3b8;
-}
-
-.dark .profile-stats {
-  border-color: #3e4042;
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
 }
 
 .ant-modal {
@@ -155,228 +125,51 @@
 }
 
 .ant-modal-content {
-  border-radius: 12px;
-  padding: 0;
+  border-radius: var(--radius-card) !important;
 }
 
 .ant-modal-header {
-  padding: 16px 24px;
-  border-bottom: 1px solid #e4e6eb;
+  padding: var(--space-md) var(--space-lg);
   margin: 0;
 }
 
 .ant-modal-body {
-  padding: 24px;
+  padding: var(--space-lg);
 }
 
 .modal-footer {
-  margin-bottom: 0;
   text-align: right;
-  margin-top: 24px;
-}
-
-.dark .ant-modal-content {
-  background: #242526;
-}
-
-.dark .ant-modal-header {
-  background: #242526;
-  border-color: #3e4042;
-}
-
-.dark .ant-modal-title {
-  color: #e4e6eb;
-}
-
-.dark .ant-modal-close {
-  color: #e4e6eb;
-}
-
-.dark .ant-modal-close:hover {
-  color: #ffffff;
-}
-
-.profile-form.dark .ant-input,
-.profile-form.dark .ant-input-textarea {
-  background-color: #3a3b3c;
-  border-color: #3e4042;
-  color: #e4e6eb;
-}
-
-.profile-form.dark .ant-input:hover,
-.profile-form.dark .ant-input-textarea:hover {
-  border-color: #666;
-}
-
-.profile-form.dark .ant-input:focus,
-.profile-form.dark .ant-input-textarea:focus {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.profile-form.dark .ant-picker {
-  background-color: #3a3b3c;
-  border-color: #3e4042;
-}
-
-.dark-date-picker input::placeholder {
-  color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.dark-date-picker input {
-  color: #e4e6eb !important;
-}
-
-.profile-form.dark .ant-picker-suffix {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.profile-form.dark .ant-picker:hover {
-  border-color: #666;
-}
-
-.profile-form.dark .ant-picker-focused {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.profile-form.dark .ant-form-item-label > label {
-  color: #e4e6eb;
-}
-
-.profile-form.dark .ant-input::placeholder,
-.profile-form.dark .ant-input-textarea textarea::placeholder {
-  color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.profile-form.dark .ant-picker-input > input:placeholder-shown {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.dark-modal .ant-modal-content {
-  background-color: #242526 !important;
-}
-
-.dark-modal .ant-modal-header {
-  background-color: #242526 !important;
-}
-
-.dark-modal .ant-modal-body {
-  background-color: #242526 !important;
-}
-
-.dark-modal .ant-modal-title {
-  color: #ffffff !important;
+  margin-top: var(--space-lg);
+  margin-bottom: 0;
 }
 
 .profile-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2xs);
 }
 
 .profile-actions button:hover,
 .cover-photo button:hover,
 .avatar-container button:hover {
-  background-color: #e4e6eb !important;
-  transition: background-color 0.2s ease;
-}
-
-.dark .profile-actions button:hover,
-.dark .cover-photo button:hover,
-.dark .avatar-container button:hover {
-  background-color: #4e4f50 !important;
-  color: #ffffff !important;
-}
-
-.dark .profile-actions button,
-.dark .cover-photo button,
-.dark .avatar-container button {
-  background-color: #3a3b3c !important;
-  color: #e4e6eb !important;
-}
-
-.dark .profile-actions button.copied {
-  color: #1890ff !important;
-}
-
-.dark-modal .ant-btn {
-  background-color: #3a3b3c;
-  border-color: #3e4042;
-  color: #e4e6eb;
-}
-
-.dark-modal .ant-btn:hover {
-  background-color: #4e4f50;
-  border-color: #4e4f50;
-  color: #ffffff;
-}
-
-.dark-modal .ant-btn-primary {
-  background-color: #1890ff;
-  border-color: #1890ff;
-  color: #ffffff;
-}
-
-.dark-modal .ant-btn-primary:hover {
-  background-color: #40a9ff;
-  border-color: #40a9ff;
+  background-color: var(--color-paper-3) !important;
+  transition: background-color var(--dur-short);
 }
 
 .profile-form .ant-form-item-label > label {
   font-weight: 500;
-  font-size: 14px;
-  color: #1f1f1f;
-}
-
-.profile-form.dark .ant-form-item-label > label {
-  color: #ffffff;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
 }
 
 .profile-form .ant-form-item {
-  margin-bottom: 20px;
-}
-
-.profile-form .ant-form-item-required::before {
-  color: #ff4d4f !important;
-}
-
-.profile-form.dark .ant-form-item-required::before {
-  color: #ff7875 !important;
-}
-
-.profile-form .ant-form-item {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-md);
 }
 
 .profile-form .ant-form-item-label {
-  padding: 0 0 4px;
-}
-
-.profile-form .ant-form-item-label > label {
-  font-size: 14px;
-  font-weight: 500;
-  height: auto;
-  color: #1f1f1f;
-}
-
-.profile-form.dark .ant-form-item-label > label {
-  color: #e4e6eb;
+  padding: 0 0 var(--space-3xs);
 }
 
 .profile-form .ant-form-item-required::before {
+  color: var(--color-accent-3) !important;
   margin-right: 2px;
-}
-
-[data-theme="dark"] .ant-input::placeholder,
-[data-theme="dark"] .ant-picker-input > input::placeholder,
-[data-theme="dark"] .ant-input-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.25) !important;
-}
-
-[data-theme="dark"] .ant-picker-input > input {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="dark"] .ant-picker-input > input[value] {
-  color: #ffffff;
 }

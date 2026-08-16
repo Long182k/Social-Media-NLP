@@ -1,50 +1,43 @@
+/* Hallmark · genre: playful · macrostructure: Workbench · theme: Hum · design-system: FE-Social-Media/design.md · designed-as-app */
 .notifications-layout {
-  padding: 0 24px;
+  padding: 0 var(--space-md);
+  background: var(--color-paper);
 }
 
 .notifications-layout.dark {
-  background: #141414;
+  background: var(--color-paper);
 }
 
 .notifications-layout.light {
-  background: #ffffff;
+  background: var(--color-paper);
 }
 
 .notifications-title {
-  padding: 16px 0;
+  padding: var(--space-md) 0 var(--space-sm);
   margin: 0;
-  font-size: 24px;
-}
-
-.notifications-title.dark {
-  color: #ffffff;
-}
-
-.notifications-title.light {
-  color: #000000;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
 }
 
 .notification-item {
-  padding: 12px 0;
+  padding: var(--space-xs) var(--space-2xs);
+  border-radius: var(--radius-input);
+  transition: background-color var(--dur-short);
 }
 
 .notification-item.dark {
-  border-bottom: 1px solid #ffffff1a;
+  border-bottom: 1px dashed var(--color-rule);
 }
 
 .notification-item.light {
-  border-bottom: 1px solid #0000000a;
+  border-bottom: 1px dashed var(--color-rule);
 }
 
-.notification-item.unread.dark {
-  background-color: #1a1a1a;
-}
-
+.notification-item.unread.dark,
 .notification-item.unread.light {
-  background-color: #f0f0f0;
-}
-
-.notification-item.unread {
+  background-color: color-mix(in oklch, var(--color-accent-3) 8%, var(--color-paper));
   cursor: pointer;
 }
 
@@ -52,45 +45,24 @@
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3s;
-}
-
-.notification-delete-icon.dark {
-  color: #ffffff80;
-}
-
-.notification-delete-icon.light {
-  color: #00000080;
+  color: var(--color-ink-2);
 }
 
 .notification-delete-icon:hover {
-  color: #ff4d4f !important;
+  color: var(--color-accent-3) !important;
 }
 
-.notification-content.dark {
-  color: #ffffff99;
-}
-
+.notification-content.dark,
 .notification-content.light {
-  color: #00000099;
+  color: color-mix(in oklch, var(--color-ink) 75%, transparent);
 }
 
-.notification-time.dark {
-  color: #ffffff60;
-}
-
+.notification-time.dark,
 .notification-time.light {
-  color: #00000060;
+  color: var(--color-ink-2);
 }
 
 .notification-time {
-  font-size: 12px;
-}
-
-/* Empty state styles */
-.notifications-layout.dark .ant-empty-description {
-  color: #ffffff;
-}
-
-.notifications-layout.dark .ant-empty-img-default path {
-  fill: #ffffff1a;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
 }

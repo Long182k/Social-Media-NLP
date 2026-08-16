@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: social-media-nlp-ws
+    runtime: node
+    plan: free
+    rootDir: BE-Social-Media
+    buildCommand: corepack enable && corepack prepare pnpm@9 --activate && pnpm install && pnpm run build
+    startCommand: node dist/main.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envGroups:
+      - social-media-nlp-env
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: SKIP_API_PREFIX
+        value: "true"
+      - key: IS_PRODUCTION
+        value: "true"

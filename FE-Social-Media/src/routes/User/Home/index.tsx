@@ -22,10 +22,7 @@ const HomePage = ({ isDarkMode }: HomePageProps) => {
       <SidebarLeft isDarkMode={isDarkMode} />
 
       <Layout className="main-content-layout">
-        <div
-          className="scrollable-content"
-          style={{ backgroundColor: isDarkMode ? "" : "rgb(245, 245, 245)" }}
-        >
+        <div className="scrollable-content">
           <Outlet />
         </div>
       </Layout>

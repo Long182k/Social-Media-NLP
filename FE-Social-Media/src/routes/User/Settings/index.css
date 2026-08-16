@@ -1,24 +1,25 @@
+/* Hallmark · component: settings inputs · genre: playful · theme: Hum · design-system: FE-Social-Media/design.md */
 .dark-mode-input.ant-input-affix-wrapper {
-  background-color: #2a2a2a !important;
+  background-color: var(--color-paper-2) !important;
 }
 
 .dark-mode-input .ant-input-prefix {
-  color: #666;
+  color: var(--color-ink-2);
 }
 
 .dark-mode-input .ant-input {
-  background-color: #2a2a2a !important;
-  color: rgba(255, 255, 255, 0.85) !important;
+  background-color: var(--color-paper-2) !important;
+  color: var(--color-ink) !important;
 }
 
 .dark-mode-input input::placeholder {
-  color: rgba(255, 255, 255, 0.45) !important;
+  color: var(--color-ink-2) !important;
 }
 
 .dark-mode-input .anticon.ant-input-password-icon {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-ink-2);
 }
 
 .dark-mode-input {
-  border-color: #434343 !important;
+  border-color: var(--color-rule) !important;
 }

@@ -1,7 +1,12 @@
+/* Hallmark · component: side-rail nav · genre: playful · theme: Hum · design-system: FE-Social-Media/design.md */
 .text-dark {
-  color: #ffffff;
+  color: var(--color-ink);
 }
 
 .text-light {
-  color: #000000;
+  color: var(--color-ink);
+}
+
+.sider-left-hum {
+  border-right: 1px dashed var(--color-rule);
 }

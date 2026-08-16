@@ -1,6 +1,6 @@
 import { createClient } from "graphql-ws";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { ApolloClient, InMemoryCache, split, HttpLink, ApolloLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, split, HttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { getActiveAccessToken } from "./axiosConfig";
@@ -9,7 +9,8 @@ import { getActiveAccessToken } from "./axiosConfig";
 const serverUrl =
   import.meta.env.VITE_SERVER_URL ||
   (typeof window !== "undefined" ? window.location.origin : "https://social-media-nlp-be.vercel.app");
-const overrideWsUrl = import.meta.env.VITE_WS_URL;
+const overrideWsUrl =
+  import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_WS_URL;
 const baseForWs = overrideWsUrl || serverUrl;
 
 // http(s) -> ws(s)
@@ -17,7 +18,8 @@ const wsBase = baseForWs.replace(/^http(s?):\/\//, "ws$1://");
 const wsUrl = `${wsBase}/graphql`;
 
 const isProductionServerless =
-  serverUrl.includes("vercel.app") || serverUrl.includes("render.com");
+  !overrideWsUrl &&
+  (serverUrl.includes("vercel.app") || serverUrl.includes("render.com"));
 
 const wsLink = isProductionServerless
   ? null

@@ -192,9 +192,9 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
               position: "absolute",
               bottom: "10px",
               right: "10px",
-              backgroundColor: "#f0f2f5",
+              backgroundColor: "var(--color-paper)",
               border: "none",
-              color: "#65676b",
+              color: "var(--color-ink-2)",
             }}
             loading={updateCoverMutation.isPending}
           >
@@ -223,7 +223,7 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
               width: "100px",
               height: "100px",
               borderRadius: "50%",
-              border: `3px solid ${isDarkMode ? "#1f1f1f" : "white"}`,
+              border: "3px solid var(--color-paper)",
             }}
           />
           <Upload
@@ -239,9 +239,9 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
                 position: "absolute",
                 bottom: "0",
                 right: "0",
-                backgroundColor: "#f0f2f5",
+                backgroundColor: "var(--color-paper-3)",
                 border: "none",
-                color: "#65676b",
+                color: "var(--color-ink-2)",
               }}
               shape="circle"
               loading={updateAvatarMutation.isPending}
@@ -259,9 +259,9 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
                   icon={<EditOutlined />}
                   onClick={() => setIsEditing(true)}
                   style={{
-                    backgroundColor: "#f0f2f5",
+                    backgroundColor: "var(--color-paper-3)",
                     border: "none",
-                    color: "#65676b",
+                    color: "var(--color-ink-2)",
                     marginRight: "8px",
                   }}
                 >
@@ -273,9 +273,11 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
                   onClick={handleFollow}
                   loading={followUserMutation.isPending}
                   style={{
-                    backgroundColor: isFollowing ? "#1890ff" : "#f0f2f5",
+                    backgroundColor: isFollowing
+                      ? "var(--color-accent-2)"
+                      : "var(--color-paper-3)",
                     border: "none",
-                    color: isFollowing ? "#ffffff" : "#65676b",
+                    color: isFollowing ? "var(--color-paper)" : "var(--color-ink-2)",
                     marginRight: "8px",
                   }}
                 >
@@ -286,9 +288,9 @@ const ProfileScreen = ({ isDarkMode }: ProfileScreenProps) => {
                 icon={isCopied ? <CheckOutlined /> : <ShareAltOutlined />}
                 onClick={handleShare}
                 style={{
-                  backgroundColor: "#f0f2f5",
+                  backgroundColor: "var(--color-paper-3)",
                   border: "none",
-                  color: isCopied ? "#1890ff" : "#65676b",
+                  color: isCopied ? "var(--color-accent-2)" : "var(--color-ink-2)",
                 }}
               >
                 {isCopied ? "Copied!" : "Copy Profile URL"}
