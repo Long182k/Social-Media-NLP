@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd BE-Social-Media && npm ci --no-audit --no-fund && npm run build && cd ../FE-Social-Media && npm ci --no-audit --no-fund && npm run build && node ../scratch/copy-dist.js"
+    "build": "cd BE-Social-Media && npm ci --no-audit --no-fund && npm run build && cd .. && node scratch/move-prisma.js && cd FE-Social-Media && npm ci --no-audit --no-fund && npm run build && node ../scratch/copy-dist.js"
   },
   "dependencies": {
     "@apollo/server": "^5.0.0",

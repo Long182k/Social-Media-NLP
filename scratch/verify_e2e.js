@@ -46,7 +46,6 @@ async function main() {
     userId = l.body?.userId;
     record('POST /auth/login', l.status === 201 || l.status === 200, `userId=${userId} (${l.status})`);
   } catch (e) { record('POST /auth/login', false, e.message); }
-
   // 3. Refresh rotation - hits Redis on the API host
   if (refreshToken) {
     try {
@@ -87,15 +86,15 @@ async function main() {
       }
     } catch (e) { record('POST /posts (NLP)', false, e.message); }
 
-    // 7. GraphQL HTTP query
+    // 7. GraphQL HTTP query (__typename; full __schema introspection is blocked in production by design)
     try {
       const g = await j(`${FE_URL}/graphql`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify({ query: '{ __schema { queryType { name } } }' }),
+        body: JSON.stringify({ query: '{ __typename }' }),
       });
-      record('POST /graphql introspection', g.status === 200 && !!g.body?.data, `status=${g.status}`);
-    } catch (e) { record('POST /graphql introspection', false, e.message); }
+      record('POST /graphql query', g.status === 200 && !!g.body?.data, `status=${g.status} ${JSON.stringify(g.body?.data)}`);
+    } catch (e) { record('POST /graphql query', false, e.message); }
   }
 
   // 8. Real-time: socket.io handshake against WS host
