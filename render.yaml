@@ -4,16 +4,27 @@ services:
     runtime: node
     plan: free
     rootDir: BE-Social-Media
-    buildCommand: corepack enable && corepack prepare pnpm@9 --activate && pnpm install && pnpm run build
+    buildCommand: npm ci --no-audit --no-fund && npm run build
     startCommand: node dist/main.js
     healthCheckPath: /health
     autoDeploy: true
-    envGroups:
-      - social-media-nlp-env
     envVars:
       - key: NODE_VERSION
-        value: "24"
+        value: "22"
       - key: SKIP_API_PREFIX
         value: "true"
       - key: IS_PRODUCTION
         value: "true"
+      - key: FRONTEND_URL
+        value: "https://social-media-nlp.vercel.app"
+      - key: CORS_ORIGINS
+        value: "https://social-media-nlp.vercel.app"
+      # Secrets — set in dashboard after apply (do not put values in this file)
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: REFRESH_JWT_SECRET
+        sync: false
