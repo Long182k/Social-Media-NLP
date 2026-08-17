@@ -1,4 +1,6 @@
-process.env.DATABASE_URL = 'postgresql://neondb_owner:npg_knzcaILw5O9A@ep-super-bird-az3gx34q-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+process.env.DATABASE_URL =
+  process.env.DATABASE_URL ||
+  'postgresql://neondb_owner:npg_knzcaILw5O9A@ep-super-bird-az3gx34q-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'super_secret_jwt_access_token_key_2026';
 }
@@ -15,43 +17,36 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 
 const server = express();
 let isInitialized = false;
-let initError: any = null;
 
 async function initServer() {
   if (!isInitialized) {
-    try {
-      const app = await NestFactory.create(
-        AppModule,
-        new ExpressAdapter(server),
-        { logger: ['error', 'warn', 'log'] },
-      );
+    const app = await NestFactory.create(
+      AppModule,
+      new ExpressAdapter(server),
+      { logger: ['error', 'warn', 'log'] },
+    );
 
-      app.enableCors({
-        origin: true,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        credentials: true,
-      });
+    app.enableCors({
+      origin: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      credentials: true,
+    });
 
-      server.use(express.json());
-      server.use(express.urlencoded({ extended: true }));
-      app.use(cookieParser());
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+    app.use(cookieParser());
 
-      app.useGlobalPipes(
-        new ValidationPipe({
-          transform: true,
-          transformOptions: {
-            enableImplicitConversion: true,
-          },
-        }),
-      );
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
 
-      await app.init();
-      isInitialized = true;
-    } catch (err: any) {
-      console.error('Failed to initialize NestJS application:', err);
-      initError = err;
-      throw err;
-    }
+    await app.init();
+    isInitialized = true;
   }
 }
 
@@ -62,19 +57,12 @@ export default async function handler(req: any, res: any) {
       status: 'online',
       service: 'Social Media NLP Backend',
       dbHost: dbUrl.substring(0, 30) + '...',
+      redis: process.env.REDIS_URL ? 'configured' : 'mock',
       timestamp: new Date().toISOString(),
     });
   }
 
   try {
-    if (initError) {
-      return res.status(500).json({
-        statusCode: 500,
-        error: 'Initialization Failed',
-        message: initError?.message || String(initError),
-        stack: initError?.stack,
-      });
-    }
     await initServer();
     return new Promise((resolve, reject) => {
       res.on('finish', resolve);

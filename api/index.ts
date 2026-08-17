@@ -7,7 +7,7 @@ if (!process.env.REFRESH_JWT_SECRET) {
 }
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../BE-Social-Media/src/app.module';
+import { AppModule } from '../BE-Social-Media/dist/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import express from 'express';
