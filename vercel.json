@@ -2,6 +2,11 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/(events|notifications|notification|bookmarks)(.*)",
+      "has": [{ "type": "header", "key": "accept", "value": "text/html" }],
+      "destination": "/index.html"
+    },
+    {
       "source": "/(auth|posts|chat|events|admin|bookmark|graphql|users|socket.io|nlp|notification|notifications|file|health)(.*)",
       "destination": "/api"
     },
