@@ -16,7 +16,9 @@ import { axiosClient, setAccessToken } from "../../api/axiosConfig";
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   import.meta.env.VITE_SERVER_URL ||
-  "https://social-media-nlp-be.vercel.app";
+  (typeof window !== "undefined"
+    ? window.location.origin
+    : "https://social-media-nlp.vercel.app");
 
 // Configure persist options for AuthStore
 const authPersistOptions: PersistOptions<
